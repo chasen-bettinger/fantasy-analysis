@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 
+from config import config
 from queries import FantasyQueries, QueryError
 
 # Configure logging
@@ -39,7 +40,7 @@ class FantasyAnalysis:
             queries: FantasyQueries instance
         """
         self.queries = queries
-        self.output_dir = Path("analysis_output")
+        self.output_dir = Path(config.OUTPUT_DIR)
         self.output_dir.mkdir(exist_ok=True)
 
     def analyze_draft_patterns(self, save_plots: bool = True) -> Dict[str, Any]:
@@ -504,18 +505,21 @@ class FantasyAnalysis:
         logger.info(f"Analysis summary saved to {summary_file}")
 
 
-def get_analysis(db_path: str = "fantasy_football.db") -> FantasyAnalysis:
+def get_analysis(db_path: str = None) -> FantasyAnalysis:
     """
     Convenience function to get a FantasyAnalysis instance.
 
     Args:
-        db_path: Path to database file
+        db_path: Path to database file (defaults to config.DATABASE_PATH)
 
     Returns:
         FantasyAnalysis instance
     """
     from database import FantasyDatabase
     from queries import FantasyQueries
+    
+    if db_path is None:
+        db_path = config.DATABASE_PATH
 
     db = FantasyDatabase(db_path)
     queries = FantasyQueries(db)

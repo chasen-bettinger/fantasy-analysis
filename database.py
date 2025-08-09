@@ -10,6 +10,8 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Generator, List, Dict, Any, Optional
 
+from config import config
+
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -105,13 +107,15 @@ class DatabaseError(Exception):
 class FantasyDatabase:
     """Fantasy Football database management class."""
 
-    def __init__(self, db_path: str = "fantasy_football.db"):
+    def __init__(self, db_path: str = None):
         """
         Initialize database connection.
 
         Args:
-            db_path: Path to SQLite database file
+            db_path: Path to SQLite database file (defaults to config.DATABASE_PATH)
         """
+        if db_path is None:
+            db_path = config.DATABASE_PATH
         self.db_path = Path(db_path)
         self.ensure_database_exists()
 
@@ -249,12 +253,12 @@ class FantasyDatabase:
 
 
 # Convenience function for quick database access
-def get_database(db_path: str = "fantasy_football.db") -> FantasyDatabase:
+def get_database(db_path: str = None) -> FantasyDatabase:
     """
     Get a FantasyDatabase instance.
 
     Args:
-        db_path: Path to database file
+        db_path: Path to database file (defaults to config.DATABASE_PATH)
 
     Returns:
         FantasyDatabase instance

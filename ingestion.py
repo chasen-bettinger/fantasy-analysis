@@ -9,11 +9,15 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Any
 
+from config import config
 from database import FantasyDatabase
 import espn
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=getattr(logging, config.LOG_LEVEL.upper()),
+    format=config.LOG_FORMAT
+)
 logger = logging.getLogger(__name__)
 
 
@@ -35,14 +39,16 @@ class DataIngestion:
         """
         self.db = db
 
-    def load_teams_data(self, teams_file: str = "teams.json") -> None:
+    def load_teams_data(self, teams_file: str = None) -> None:
         """
-        Load NFL teams and games data from teams.json file.
+        Load NFL teams and games data from teams file.
 
         Args:
-            teams_file: Path to teams JSON file
+            teams_file: Path to teams JSON file (defaults to config.TEAMS_FILE)
         """
         try:
+            if teams_file is None:
+                teams_file = config.TEAMS_FILE
             teams_path = Path(teams_file)
             if not teams_path.exists():
                 raise IngestionError(f"Teams file not found: {teams_file}")
@@ -126,14 +132,16 @@ class DataIngestion:
         self.db.execute_many(query, list(unique_games))
         return len(unique_games)
 
-    def load_draft_history(self, draft_file: str = "draft_history.json") -> None:
+    def load_draft_history(self, draft_file: str = None) -> None:
         """
         Load draft history data from JSON file.
 
         Args:
-            draft_file: Path to draft history JSON file
+            draft_file: Path to draft history JSON file (defaults to config.DRAFT_HISTORY_FILE)
         """
         try:
+            if draft_file is None:
+                draft_file = config.DRAFT_HISTORY_FILE
             draft_path = Path(draft_file)
             if not draft_path.exists():
                 raise IngestionError(f"Draft history file not found: {draft_file}")
@@ -275,7 +283,7 @@ class DataIngestion:
             if not players_data:
                 raise IngestionError("No player data received from ESPN API")
 
-            with open("players_data.json", "w") as f:
+            with open(config.PLAYERS_CACHE_FILE, "w") as f:
                 f.write(json.dumps(players_data))
 
             players_loaded = self._load_players(players_data)
@@ -357,16 +365,16 @@ class DataIngestion:
 
     def run_full_ingestion(
         self,
-        teams_file: str = "teams.json",
-        draft_file: str = "draft_history.json",
+        teams_file: str = None,
+        draft_file: str = None,
         force_player_refresh: bool = False,
     ) -> Dict[str, int]:
         """
         Run complete data ingestion process.
 
         Args:
-            teams_file: Path to teams JSON file
-            draft_file: Path to draft history JSON file
+            teams_file: Path to teams JSON file (defaults to config.TEAMS_FILE)
+            draft_file: Path to draft history JSON file (defaults to config.DRAFT_HISTORY_FILE)
             force_player_refresh: Whether to refresh player data from API
 
         Returns:
@@ -376,6 +384,11 @@ class DataIngestion:
 
         try:
             # Load teams and games data first
+            if teams_file is None:
+                teams_file = config.TEAMS_FILE
+            if draft_file is None:
+                draft_file = config.DRAFT_HISTORY_FILE
+                
             self.load_teams_data(teams_file)
 
             # Load players from API BEFORE draft picks (foreign key dependency)
@@ -395,17 +408,19 @@ class DataIngestion:
             raise IngestionError(f"Full ingestion failed: {e}")
 
 
-def run_ingestion(db_path: str = "fantasy_football.db", **kwargs) -> Dict[str, int]:
+def run_ingestion(db_path: str = None, **kwargs) -> Dict[str, int]:
     """
     Convenience function to run data ingestion.
 
     Args:
-        db_path: Path to database file
+        db_path: Path to database file (defaults to config.DATABASE_PATH)
         **kwargs: Additional arguments for run_full_ingestion
 
     Returns:
         Dictionary with ingestion statistics
     """
+    if db_path is None:
+        db_path = config.DATABASE_PATH
     db = FantasyDatabase(db_path)
     ingestion = DataIngestion(db)
     return ingestion.run_full_ingestion(**kwargs)

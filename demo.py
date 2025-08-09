@@ -9,6 +9,7 @@ import time
 from pathlib import Path
 from typing import Dict, Any
 
+from config import config
 from database import FantasyDatabase, get_database
 from ingestion import DataIngestion
 from queries import FantasyQueries, get_queries
@@ -16,8 +17,8 @@ from analysis import FantasyAnalysis, get_analysis
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",  # level name is a standard logging format
+    level=getattr(logging, config.LOG_LEVEL.upper()),
+    format=config.LOG_FORMAT,
 )
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,8 @@ def demo_database_setup() -> FantasyDatabase:
 
     # Initialize database
     print("Initializing SQLite database...")
-    db = get_database("demo_fantasy_football.db")
+    demo_db_path = "demo_" + config.DATABASE_PATH
+    db = get_database(demo_db_path)
 
     # Show initial database stats
     stats = db.get_database_stats()
@@ -63,8 +65,8 @@ def demo_data_ingestion(db: FantasyDatabase) -> Dict[str, int]:
     try:
         # Run full ingestion
         stats = ingestion.run_full_ingestion(
-            teams_file="teams.json",
-            draft_file="draft_history.json",
+            teams_file=config.TEAMS_FILE,
+            draft_file=config.DRAFT_HISTORY_FILE,
             force_player_refresh=False,  # Don't refresh players if they exist
             # force_player_refresh=True,  # Don't refresh players if they exist
         )
@@ -242,7 +244,8 @@ def demo_file_outputs(analysis: FantasyAnalysis) -> None:
         print("Output directory not found")
 
     # Database file
-    db_path = Path("demo_fantasy_football.db")
+    demo_db_path = "demo_" + config.DATABASE_PATH
+    db_path = Path(demo_db_path)
     if db_path.exists():
         size_kb = db_path.stat().st_size / 1024
         print(f"\nDatabase file: {db_path.name} ({size_kb:.1f} KB)")
@@ -253,7 +256,8 @@ def demo_performance_metrics() -> None:
     print_section_header("PERFORMANCE METRICS")
 
     # Query performance test
-    queries = get_queries("demo_fantasy_football.db")
+    demo_db_path = "demo_" + config.DATABASE_PATH
+    queries = get_queries(demo_db_path)
 
     print("Query performance test:")
 
@@ -298,16 +302,17 @@ def main():
 
         if not ingestion_stats:
             print(
-                "Demo cannot continue without data. Please ensure teams.json and draft_history.json exist."
+                f"Demo cannot continue without data. Please ensure {config.TEAMS_FILE} and {config.DRAFT_HISTORY_FILE} exist."
             )
             return
 
         # Step 3: Basic queries
-        queries = get_queries("demo_fantasy_football.db")
+        demo_db_path = "demo_" + config.DATABASE_PATH
+        queries = get_queries(demo_db_path)
         demo_basic_queries(queries)
 
         # Step 4: Advanced analysis
-        analysis = get_analysis("demo_fantasy_football.db")
+        analysis = get_analysis(demo_db_path)
         analysis_report = demo_advanced_analysis(analysis)
 
         # Step 5: Show generated files
@@ -323,7 +328,7 @@ def main():
         print(f"Analysis components: {len(analysis_report)}")
         print("\nNext steps:")
         print(
-            "1. Explore the generated visualizations in the 'analysis_output' directory"
+            f"1. Explore the generated visualizations in the '{config.OUTPUT_DIR}' directory"
         )
         print("2. Review the analysis summary text file")
         print("3. Examine the SQLite database with your preferred database tool")

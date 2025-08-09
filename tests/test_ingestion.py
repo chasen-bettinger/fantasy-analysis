@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
+from config import config
 from database import FantasyDatabase
 from ingestion import DataIngestion, IngestionError
 
@@ -298,4 +299,4 @@ class TestDataIngestion:
     def test_run_full_ingestion_missing_files(self):
         """Test full ingestion with missing files."""
         with pytest.raises(IngestionError, match="Full ingestion failed"):
-            self.ingestion.run_full_ingestion("missing_teams.json", "missing_draft.json")
+            self.ingestion.run_full_ingestion("missing_" + config.TEAMS_FILE, "missing_" + config.DRAFT_HISTORY_FILE)

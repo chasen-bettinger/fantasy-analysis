@@ -8,6 +8,7 @@ import logging
 from typing import Dict, List, Any, Optional, Tuple
 import pandas as pd
 
+from config import config
 from database import FantasyDatabase, DatabaseError
 
 # Configure logging
@@ -110,7 +111,6 @@ class FantasyQueries:
 
         try:
             results = self.db.execute_query(query, params)
-            print("len of results :>>", len(results))
             return pd.DataFrame([dict(row) for row in results])
         except DatabaseError as e:
             raise QueryError(f"Failed to query picks by position: {e}")
@@ -384,16 +384,18 @@ class FantasyQueries:
             raise QueryError(f"Failed to get database summary: {e}")
 
 
-def get_queries(db_path: str = "fantasy_football.db") -> FantasyQueries:
+def get_queries(db_path: str = None) -> FantasyQueries:
     """
     Convenience function to get a FantasyQueries instance.
 
     Args:
-        db_path: Path to database file
+        db_path: Path to database file (defaults to config.DATABASE_PATH)
 
     Returns:
         FantasyQueries instance
     """
+    if db_path is None:
+        db_path = config.DATABASE_PATH
     db = FantasyDatabase(db_path)
     return FantasyQueries(db)
 

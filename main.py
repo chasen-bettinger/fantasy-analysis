@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
+from config import config
 from database import get_database, DatabaseError
 from ingestion import run_ingestion, IngestionError
 from queries import get_queries, QueryError
@@ -18,7 +19,7 @@ from analysis import get_analysis, AnalysisError
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=getattr(logging, config.LOG_LEVEL.upper()), format=config.LOG_FORMAT
 )
 logger = logging.getLogger(__name__)
 
@@ -107,18 +108,6 @@ def run_queries(db_path: str, query_type: Optional[str] = None) -> None:
                     print(f"  Pick {pick_num}: {player} ({pos}, {team})")
             else:
                 print("No draft picks found")
-
-        if query_type == "teams" or query_type is None:
-            print("\n=== Fantasy Team Summary ===")
-            team_summary = queries.get_team_draft_summary()
-
-            if not team_summary.empty:
-                for _, team in team_summary.iterrows():
-                    name = team.get("fantasy_team_name", "Unknown")
-                    picks = team.get("total_picks", 0)
-                    print(f"  {name}: {picks} picks, avg position {avg:.1f}")
-            else:
-                print("No fantasy teams found")
 
         if query_type == "positions":
             print("\n=== Position Analysis ===")
@@ -233,20 +222,20 @@ Examples:
 
     parser.add_argument(
         "--db",
-        default="fantasy_football.db",
-        help="Database file path (default: fantasy_football.db)",
+        default=config.DATABASE_PATH,
+        help=f"Database file path (default: {config.DATABASE_PATH})",
     )
 
     parser.add_argument(
         "--teams-file",
-        default="teams.json",
-        help="Teams JSON file path (default: teams.json)",
+        default=config.TEAMS_FILE,
+        help=f"Teams JSON file path (default: {config.TEAMS_FILE})",
     )
 
     parser.add_argument(
         "--draft-file",
-        default="draft_history.json",
-        help="Draft history JSON file path (default: draft_history.json)",
+        default=config.DRAFT_HISTORY_FILE,
+        help=f"Draft history JSON file path (default: {config.DRAFT_HISTORY_FILE})",
     )
 
     parser.add_argument("--type", help="Specific type of query or analysis to run")
