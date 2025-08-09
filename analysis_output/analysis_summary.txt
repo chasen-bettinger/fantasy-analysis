@@ -1,0 +1,36 @@
+Fantasy Football Draft Analysis Report
+==================================================
+
+Database Summary:
+  nfl_teams: 33 records
+  games: 272 records
+  fantasy_teams: 12 records
+  players: 1903 records
+  draft_picks: 192 records
+
+Draft Patterns:
+  Total picks: 192
+  Rounds: 16
+  Positions: 6
+
+Position Distribution:
+  WR: 63 picks
+  RB: 60 picks
+  QB: 22 picks
+  TE: 19 picks
+  DST: 15 picks
+  K: 13 picks
+
+Team Strategies:
+  Teams analyzed: 12
+  Average picks per team: 0.0
+
+Position Scarcity Scores:
+  DST: 0.71
+  K: 0.64
+  QB: 1.11
+  RB: 1.21
+  TE: 0.88
+  WR: 1.19
+
+Report generated on: 2025-08-09 12:17:27.447767
