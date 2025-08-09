@@ -172,7 +172,7 @@ class FantasyQueries:
             MIN(dp.overall_pick_number) as earliest_overall,
             MAX(dp.overall_pick_number) as latest_overall
         FROM draft_picks dp
-        LEFT JOIN players p ON dp.player_id = p.espn_player_id
+        LEFT JOIN players p ON dp.player_id = p.id
         WHERE p.position IS NOT NULL
         GROUP BY dp.round_id, p.position
         ORDER BY dp.round_id, picks_count DESC
@@ -202,7 +202,7 @@ class FantasyQueries:
             COUNT(CASE WHEN p.position = 'TE' THEN 1 END) as te_drafted,
             AVG(dp.overall_pick_number) as avg_draft_position
         FROM draft_picks dp
-        LEFT JOIN players p ON dp.player_id = p.espn_player_id
+        LEFT JOIN players p ON dp.player_id = p.id
         LEFT JOIN nfl_teams nt ON p.nfl_team_id = nt.id
         WHERE nt.name IS NOT NULL
         GROUP BY nt.id, nt.name, nt.abbreviation
@@ -232,7 +232,7 @@ class FantasyQueries:
             AVG(dp.overall_pick_number) as avg_pick,
             COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY dp.round_id) as round_percentage
         FROM draft_picks dp
-        LEFT JOIN players p ON dp.player_id = p.espn_player_id
+        LEFT JOIN players p ON dp.player_id = p.id
         WHERE p.position IS NOT NULL
         GROUP BY dp.round_id, p.position
         ORDER BY dp.round_id, position_picks_in_round DESC
@@ -260,7 +260,7 @@ class FantasyQueries:
             dp.round_id,
             ft.name as fantasy_team_name
         FROM draft_picks dp
-        LEFT JOIN players p ON dp.player_id = p.espn_player_id
+        LEFT JOIN players p ON dp.player_id = p.id
         LEFT JOIN nfl_teams nt ON p.nfl_team_id = nt.id
         LEFT JOIN fantasy_teams ft ON dp.fantasy_team_id = ft.espn_team_id
         WHERE dp.is_keeper = 1
@@ -292,7 +292,7 @@ class FantasyQueries:
             MIN(dp.overall_pick_number) as earliest_pick,
             MAX(dp.overall_pick_number) as latest_pick
         FROM draft_picks dp
-        LEFT JOIN players p ON dp.player_id = p.espn_player_id
+        LEFT JOIN players p ON dp.player_id = p.id
         WHERE p.position IS NOT NULL
         GROUP BY 
             CASE WHEN dp.auto_draft_type_id = 0 THEN 'Manual' ELSE 'Auto' END,
