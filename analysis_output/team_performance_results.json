@@ -1,0 +1,151 @@
+{
+  "teams_analyzed": 12,
+  "avg_total_score": 2435.75,
+  "std_total_score": 272.80233436751166,
+  "score_range": {
+    "min": 1883.0,
+    "max": 2774.0
+  },
+  "by_final_position": {
+    "1": {
+      "team_count": 1,
+      "avg_total_score": 2695.0,
+      "avg_win_pct": 0.6923076923076923,
+      "avg_points_for": 1243.5
+    },
+    "2": {
+      "team_count": 1,
+      "avg_total_score": 2315.0,
+      "avg_win_pct": 0.7692307692307693,
+      "avg_points_for": 1219.5
+    },
+    "3": {
+      "team_count": 1,
+      "avg_total_score": 2774.0,
+      "avg_win_pct": 0.6153846153846154,
+      "avg_points_for": 1075.5
+    },
+    "4": {
+      "team_count": 1,
+      "avg_total_score": 2740.0,
+      "avg_win_pct": 0.6923076923076923,
+      "avg_points_for": 1145.0
+    },
+    "5": {
+      "team_count": 1,
+      "avg_total_score": 2268.0,
+      "avg_win_pct": 0.5384615384615384,
+      "avg_points_for": 993.0
+    },
+    "6": {
+      "team_count": 1,
+      "avg_total_score": 2548.0,
+      "avg_win_pct": 0.6923076923076923,
+      "avg_points_for": 1077.5
+    },
+    "7": {
+      "team_count": 1,
+      "avg_total_score": 2623.0,
+      "avg_win_pct": 0.5384615384615384,
+      "avg_points_for": 1061.0
+    },
+    "8": {
+      "team_count": 1,
+      "avg_total_score": 2378.0,
+      "avg_win_pct": 0.46153846153846156,
+      "avg_points_for": 1077.5
+    },
+    "9": {
+      "team_count": 1,
+      "avg_total_score": 2447.0,
+      "avg_win_pct": 0.23076923076923078,
+      "avg_points_for": 908.0
+    },
+    "10": {
+      "team_count": 1,
+      "avg_total_score": 2498.0,
+      "avg_win_pct": 0.23076923076923078,
+      "avg_points_for": 986.5
+    },
+    "11": {
+      "team_count": 1,
+      "avg_total_score": 2060.0,
+      "avg_win_pct": 0.23076923076923078,
+      "avg_points_for": 822.0
+    },
+    "12": {
+      "team_count": 1,
+      "avg_total_score": 1883.0,
+      "avg_win_pct": 0.3076923076923077,
+      "avg_points_for": 797.0
+    }
+  },
+  "position_contributions": {
+    "QB": {
+      "top_teams_total": 488.3333333333333,
+      "bottom_teams_total": 436.5,
+      "top_teams_avg_per_pick": 244.16666666666666,
+      "bottom_teams_avg_per_pick": 218.25,
+      "difference_total": 51.833333333333314,
+      "difference_per_pick": 25.916666666666657
+    },
+    "RB": {
+      "top_teams_total": 506.5,
+      "bottom_teams_total": 343.5,
+      "top_teams_avg_per_pick": 101.09722222222221,
+      "bottom_teams_avg_per_pick": 85.875,
+      "difference_total": 163.0,
+      "difference_per_pick": 15.222222222222214
+    },
+    "WR": {
+      "top_teams_total": 784.0,
+      "bottom_teams_total": 799.8333333333334,
+      "top_teams_avg_per_pick": 156.79166666666669,
+      "bottom_teams_avg_per_pick": 133.30555555555557,
+      "difference_total": -15.833333333333371,
+      "difference_per_pick": 23.486111111111114
+    },
+    "TE": {
+      "top_teams_total": 245.83333333333334,
+      "bottom_teams_total": 226.0,
+      "top_teams_avg_per_pick": 101.41666666666667,
+      "bottom_teams_avg_per_pick": 113.0,
+      "difference_total": 19.833333333333343,
+      "difference_per_pick": -11.583333333333329
+    },
+    "K": {
+      "top_teams_total": 294.3333333333333,
+      "bottom_teams_total": 247.66666666666666,
+      "top_teams_avg_per_pick": 147.16666666666666,
+      "bottom_teams_avg_per_pick": 123.83333333333333,
+      "difference_total": 46.66666666666666,
+      "difference_per_pick": 23.33333333333333
+    },
+    "DST": {
+      "top_teams_total": 237.66666666666666,
+      "bottom_teams_total": 261.3333333333333,
+      "top_teams_avg_per_pick": 118.83333333333333,
+      "bottom_teams_avg_per_pick": 130.66666666666666,
+      "difference_total": -23.666666666666657,
+      "difference_per_pick": -11.833333333333329
+    }
+  },
+  "correlations": {
+    "total_score_vs_position": -0.6570926585171746,
+    "avg_score_vs_position": -0.6570926585171746,
+    "win_pct_vs_position": -0.8958070422896394,
+    "points_for_vs_position": -0.9013382719505606,
+    "qb_total_vs_position": -0.5661613816972455,
+    "qb_avg_vs_position": -0.5661613816972455,
+    "rb_total_vs_position": -0.3390935466168514,
+    "rb_avg_vs_position": -0.261134308217864,
+    "wr_total_vs_position": -0.08344415004411133,
+    "wr_avg_vs_position": -0.3526339388638206,
+    "te_total_vs_position": -0.04081823043379085,
+    "te_avg_vs_position": -0.02048164914970719,
+    "k_total_vs_position": -0.349180309741745,
+    "k_avg_vs_position": -0.349180309741745,
+    "dst_total_vs_position": -0.12684562306496158,
+    "dst_avg_vs_position": -0.12684562306496158
+  }
+}

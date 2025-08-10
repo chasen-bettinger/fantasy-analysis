@@ -152,8 +152,6 @@ class DataIngestion:
 
             # if not isinstance(data, list) or not data:
             #     raise IngestionError("Draft history data should be a non-empty list")
-            with open("./test.json", "w") as f:
-                f.write(json.dumps(data))
 
             # Extract draft details from the first league entry
             draft_detail = data[0].get("draftDetail", {})
