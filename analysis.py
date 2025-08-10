@@ -7,6 +7,7 @@ Provides statistical analysis and visualization functions for draft and player d
 import logging
 from typing import Dict, List, Any, Optional, Tuple
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
@@ -402,6 +403,383 @@ class FantasyAnalysis:
 
         logger.info(f"Position scarcity plots saved to {self.output_dir}")
 
+    def analyze_team_performance_vs_scores(
+        self, save_plots: bool = True, only_starters: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Analyze the relationship between player fantasy scores and team final standings.
+
+        This analysis examines how total team fantasy scores correlate with final position,
+        which positions contribute most to successful teams, and other performance insights.
+
+        Args:
+            save_plots: Whether to save generated plots
+
+        Returns:
+            Dictionary with team performance vs scores analysis
+        """
+        try:
+            logger.info("Analyzing team performance vs fantasy scores...")
+
+            # Get team performance data by joining fantasy_teams, draft_picks, and players
+            team_scores_query = """
+            SELECT 
+                ft.name as fantasy_team_name,
+                ft.final_position,
+                ft.wins,
+                ft.losses,
+                ft.ties,
+                ft.points_for,
+                ft.points_against,
+                SUM(p.fantasy_score) as total_fantasy_score,
+                AVG(p.fantasy_score) as avg_fantasy_score,
+                SUM(CASE WHEN p.position = 'QB' THEN p.fantasy_score ELSE 0 END) as qb_score,
+                SUM(CASE WHEN p.position = 'RB' THEN p.fantasy_score ELSE 0 END) as rb_score,
+                SUM(CASE WHEN p.position = 'WR' THEN p.fantasy_score ELSE 0 END) as wr_score,
+                SUM(CASE WHEN p.position = 'TE' THEN p.fantasy_score ELSE 0 END) as te_score,
+                SUM(CASE WHEN p.position = 'K' THEN p.fantasy_score ELSE 0 END) as k_score,
+                SUM(CASE WHEN p.position = 'DST' THEN p.fantasy_score ELSE 0 END) as dst_score,
+                COUNT(CASE WHEN p.position = 'QB' THEN 1 END) as qb_picks,
+                COUNT(CASE WHEN p.position = 'RB' THEN 1 END) as rb_picks,
+                COUNT(CASE WHEN p.position = 'WR' THEN 1 END) as wr_picks,
+                COUNT(CASE WHEN p.position = 'TE' THEN 1 END) as te_picks,
+                COUNT(CASE WHEN p.position = 'K' THEN 1 END) as k_picks,
+                COUNT(CASE WHEN p.position = 'DST' THEN 1 END) as dst_picks
+            FROM rosters r 
+            LEFT JOIN fantasy_teams ft on ft.id=r.team_id 
+            LEFT JOIN players p on p.id=r.player_id
+            WHERE ft.final_position IS NOT NULL
+            """
+
+            if only_starters:
+                team_scores_query += (
+                    " AND (r.lineup_slot_id <= 17 or r.lineup_slot_id == 23)"
+                )
+
+            team_scores_query += " GROUP BY ft.id, ft.name, ft.final_position, ft.wins, ft.losses, ft.ties, ft.points_for, ft.points_against"
+            team_scores_query += " ORDER BY ft.final_position"
+
+            results = self.queries.db.execute_query(team_scores_query)
+            team_performance_df = pd.DataFrame([dict(row) for row in results])
+
+            if team_performance_df.empty:
+                raise AnalysisError("No team performance data available for analysis")
+
+            # Calculate additional metrics
+            team_performance_df["win_percentage"] = (
+                team_performance_df["wins"]
+                / (
+                    team_performance_df["wins"]
+                    + team_performance_df["losses"]
+                    + team_performance_df["ties"]
+                )
+            ).fillna(0)
+
+            # Calculate position averages per pick
+            for pos in ["qb", "rb", "wr", "te", "k", "dst"]:
+                picks_col = f"{pos}_picks"
+                score_col = f"{pos}_score"
+                avg_col = f"{pos}_avg_score"
+                team_performance_df[avg_col] = (
+                    team_performance_df[score_col] / team_performance_df[picks_col]
+                ).fillna(0)
+
+            # Statistical analysis
+            analysis_results = self._calculate_performance_statistics(
+                team_performance_df
+            )
+
+            # Position contribution analysis
+            position_contributions = self._analyze_position_contributions(
+                team_performance_df
+            )
+            analysis_results["position_contributions"] = position_contributions
+
+            # Correlation analysis
+            correlations = self._calculate_performance_correlations(team_performance_df)
+            analysis_results["correlations"] = correlations
+
+            if save_plots:
+                self._plot_team_performance_analysis(team_performance_df)
+
+            logger.info("Team performance vs scores analysis completed")
+            return analysis_results
+
+        except Exception as e:
+            raise AnalysisError(f"Failed to analyze team performance vs scores: {e}")
+
+    def _calculate_performance_statistics(self, df: pd.DataFrame) -> Dict[str, Any]:
+        """Calculate basic statistics for team performance analysis."""
+        stats = {
+            "teams_analyzed": len(df),
+            "avg_total_score": df["total_fantasy_score"].mean(),
+            "std_total_score": df["total_fantasy_score"].std(),
+            "score_range": {
+                "min": df["total_fantasy_score"].min(),
+                "max": df["total_fantasy_score"].max(),
+            },
+            "by_final_position": {},
+        }
+
+        # Analysis by final position
+        for position in sorted(df["final_position"].unique()):
+            pos_data = df[df["final_position"] == position]
+            stats["by_final_position"][position] = {
+                "team_count": len(pos_data),
+                "avg_total_score": pos_data["total_fantasy_score"].mean(),
+                "avg_win_pct": pos_data["win_percentage"].mean(),
+                "avg_points_for": pos_data["points_for"].mean(),
+            }
+
+        return stats
+
+    def _analyze_position_contributions(self, df: pd.DataFrame) -> Dict[str, Any]:
+        """Analyze how different positions contribute to team success."""
+        positions = ["qb", "rb", "wr", "te", "k", "dst"]
+        contributions = {}
+
+        # Split teams into top and bottom performers
+        median_position = df["final_position"].median()
+        top_teams = df[df["final_position"] <= median_position]
+        bottom_teams = df[df["final_position"] > median_position]
+
+        for pos in positions:
+            score_col = f"{pos}_score"
+            avg_col = f"{pos}_avg_score"
+
+            contributions[pos.upper()] = {
+                "top_teams_total": top_teams[score_col].mean(),
+                "bottom_teams_total": bottom_teams[score_col].mean(),
+                "top_teams_avg_per_pick": top_teams[avg_col].mean(),
+                "bottom_teams_avg_per_pick": bottom_teams[avg_col].mean(),
+                "difference_total": top_teams[score_col].mean()
+                - bottom_teams[score_col].mean(),
+                "difference_per_pick": top_teams[avg_col].mean()
+                - bottom_teams[avg_col].mean(),
+            }
+
+        return contributions
+
+    def _calculate_performance_correlations(self, df: pd.DataFrame) -> Dict[str, float]:
+        """Calculate correlations between various metrics and final position."""
+        # Note: Lower final position = better performance, so negative correlations are good
+        correlations = {}
+
+        def safe_corr(x, y):
+            """Calculate correlation safely, handling NaN values."""
+            try:
+                corr = x.corr(y)
+                return corr if pd.notna(corr) else 0.0
+            except (ValueError, TypeError):
+                return 0.0
+
+        # Overall performance correlations
+        correlations["total_score_vs_position"] = safe_corr(
+            df["total_fantasy_score"], df["final_position"]
+        )
+        correlations["avg_score_vs_position"] = safe_corr(
+            df["avg_fantasy_score"], df["final_position"]
+        )
+        correlations["win_pct_vs_position"] = safe_corr(
+            df["win_percentage"], df["final_position"]
+        )
+        correlations["points_for_vs_position"] = safe_corr(
+            df["points_for"], df["final_position"]
+        )
+
+        # Position-specific correlations
+        positions = ["qb", "rb", "wr", "te", "k", "dst"]
+        for pos in positions:
+            score_col = f"{pos}_score"
+            avg_col = f"{pos}_avg_score"
+            correlations[f"{pos}_total_vs_position"] = safe_corr(
+                df[score_col], df["final_position"]
+            )
+            correlations[f"{pos}_avg_vs_position"] = safe_corr(
+                df[avg_col], df["final_position"]
+            )
+
+        return correlations
+
+    def _plot_team_performance_analysis(self, df: pd.DataFrame) -> None:
+        """Create visualizations for team performance analysis."""
+        fig, axes = plt.subplots(3, 2, figsize=(16, 18))
+        fig.suptitle(
+            "Team Performance vs Fantasy Scores Analysis",
+            fontsize=16,
+            fontweight="bold",
+        )
+
+        # 1. Total fantasy score vs final position
+        axes[0, 0].scatter(
+            df["total_fantasy_score"], df["final_position"], alpha=0.7, s=80
+        )
+        axes[0, 0].set_xlabel("Total Fantasy Score")
+        axes[0, 0].set_ylabel("Final Position (1 = Best)")
+        axes[0, 0].set_title("Total Fantasy Score vs Final Position")
+        axes[0, 0].invert_yaxis()  # Lower position numbers at top
+
+        # Add trendline if data is suitable
+        if (
+            len(df) > 1
+            and df["total_fantasy_score"].std() > 0
+            and df["final_position"].std() > 0
+        ):
+            try:
+                z = np.polyfit(df["total_fantasy_score"], df["final_position"], 1)
+                p = np.poly1d(z)
+                axes[0, 0].plot(
+                    df["total_fantasy_score"],
+                    p(df["total_fantasy_score"]),
+                    "r--",
+                    alpha=0.8,
+                )
+            except (np.linalg.LinAlgError, ValueError):
+                pass  # Skip trendline if calculation fails
+
+        # 2. Average fantasy scores by final position
+        position_avgs = df.groupby("final_position")["total_fantasy_score"].mean()
+        axes[0, 1].bar(position_avgs.index, position_avgs.values, alpha=0.7)
+        axes[0, 1].set_xlabel("Final Position")
+        axes[0, 1].set_ylabel("Average Total Fantasy Score")
+        axes[0, 1].set_title("Average Fantasy Score by Final Position")
+
+        # 3. Position contribution comparison (top vs bottom teams)
+        positions = ["QB", "RB", "WR", "TE", "K", "DST"]
+        median_pos = df["final_position"].median()
+        top_teams = df[df["final_position"] <= median_pos]
+        bottom_teams = df[df["final_position"] > median_pos]
+
+        top_scores = [top_teams[f"{pos.lower()}_score"].mean() for pos in positions]
+        bottom_scores = [
+            bottom_teams[f"{pos.lower()}_score"].mean() for pos in positions
+        ]
+
+        x = range(len(positions))
+        width = 0.35
+        axes[1, 0].bar(
+            [i - width / 2 for i in x],
+            top_scores,
+            width,
+            label="Top Half Teams",
+            alpha=0.7,
+        )
+        axes[1, 0].bar(
+            [i + width / 2 for i in x],
+            bottom_scores,
+            width,
+            label="Bottom Half Teams",
+            alpha=0.7,
+        )
+        axes[1, 0].set_xlabel("Position")
+        axes[1, 0].set_ylabel("Average Fantasy Score")
+        axes[1, 0].set_title("Position Scores: Top vs Bottom Teams")
+        axes[1, 0].set_xticks(x)
+        axes[1, 0].set_xticklabels(positions)
+        axes[1, 0].legend()
+
+        # 4. Win percentage vs total fantasy score
+        axes[1, 1].scatter(
+            df["total_fantasy_score"], df["win_percentage"], alpha=0.7, s=80
+        )
+        axes[1, 1].set_xlabel("Total Fantasy Score")
+        axes[1, 1].set_ylabel("Win Percentage")
+        axes[1, 1].set_title("Win Percentage vs Total Fantasy Score")
+
+        # Add trendline if data is suitable
+        if (
+            len(df) > 1
+            and df["total_fantasy_score"].std() > 0
+            and df["win_percentage"].std() > 0
+        ):
+            try:
+                z = np.polyfit(df["total_fantasy_score"], df["win_percentage"], 1)
+                p = np.poly1d(z)
+                axes[1, 1].plot(
+                    df["total_fantasy_score"],
+                    p(df["total_fantasy_score"]),
+                    "r--",
+                    alpha=0.8,
+                )
+            except (np.linalg.LinAlgError, ValueError):
+                pass  # Skip trendline if calculation fails
+
+        # 5. Points for vs fantasy score
+        axes[2, 0].scatter(df["total_fantasy_score"], df["points_for"], alpha=0.7, s=80)
+        axes[2, 0].set_xlabel("Total Fantasy Score")
+        axes[2, 0].set_ylabel("Points For")
+        axes[2, 0].set_title("Points For vs Total Fantasy Score")
+
+        # Add trendline if data is suitable
+        if (
+            len(df) > 1
+            and df["total_fantasy_score"].std() > 0
+            and df["points_for"].std() > 0
+        ):
+            try:
+                z = np.polyfit(df["total_fantasy_score"], df["points_for"], 1)
+                p = np.poly1d(z)
+                axes[2, 0].plot(
+                    df["total_fantasy_score"],
+                    p(df["total_fantasy_score"]),
+                    "r--",
+                    alpha=0.8,
+                )
+            except (np.linalg.LinAlgError, ValueError):
+                pass  # Skip trendline if calculation fails
+
+        # 6. Correlation heatmap of key metrics
+        try:
+            corr_columns = [
+                "final_position",
+                "total_fantasy_score",
+                "win_percentage",
+                "points_for",
+                "qb_score",
+                "rb_score",
+                "wr_score",
+                "te_score",
+            ]
+            available_columns = [col for col in corr_columns if col in df.columns]
+            corr_data = df[available_columns].corr()
+
+            im = axes[2, 1].imshow(corr_data.values, cmap="RdBu_r", vmin=-1, vmax=1)
+            axes[2, 1].set_xticks(range(len(corr_data.columns)))
+            axes[2, 1].set_yticks(range(len(corr_data.columns)))
+            axes[2, 1].set_xticklabels(corr_data.columns, rotation=45, ha="right")
+            axes[2, 1].set_yticklabels(corr_data.columns)
+            axes[2, 1].set_title("Correlation Matrix: Key Performance Metrics")
+
+            # Add correlation values as text
+            for i in range(len(corr_data.columns)):
+                for j in range(len(corr_data.columns)):
+                    value = corr_data.iloc[i, j]
+                    if pd.notna(value):
+                        axes[2, 1].text(
+                            j, i, f"{value:.2f}", ha="center", va="center", fontsize=8
+                        )
+        except Exception:
+            # If correlation heatmap fails, just show a simple text
+            axes[2, 1].text(
+                0.5,
+                0.5,
+                "Correlation analysis\nnot available",
+                ha="center",
+                va="center",
+                transform=axes[2, 1].transAxes,
+            )
+            axes[2, 1].set_title("Correlation Matrix: Key Performance Metrics")
+
+        plt.tight_layout()
+        plt.savefig(
+            self.output_dir / "team_performance_vs_scores.png",
+            dpi=300,
+            bbox_inches="tight",
+        )
+        plt.close()
+
+        logger.info(f"Team performance analysis plots saved to {self.output_dir}")
+
     def generate_comprehensive_report(self, save_plots: bool = True) -> Dict[str, Any]:
         """
         Generate a comprehensive analysis report.
@@ -420,6 +798,9 @@ class FantasyAnalysis:
                 "draft_patterns": self.analyze_draft_patterns(save_plots),
                 "team_strategies": self.analyze_team_strategies(save_plots),
                 "position_scarcity": self.analyze_position_scarcity(save_plots),
+                "team_performance_vs_scores": self.analyze_team_performance_vs_scores(
+                    save_plots
+                ),
             }
 
             # Add additional analyses
@@ -517,7 +898,7 @@ def get_analysis(db_path: str = None) -> FantasyAnalysis:
     """
     from database import FantasyDatabase
     from queries import FantasyQueries
-    
+
     if db_path is None:
         db_path = config.DATABASE_PATH
 

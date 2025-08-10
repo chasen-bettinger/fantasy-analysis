@@ -41,7 +41,7 @@ def demo_database_setup() -> FantasyDatabase:
 
     # Initialize database
     print("Initializing SQLite database...")
-    demo_db_path = "demo_" + config.DATABASE_PATH
+    demo_db_path = config.DATABASE_PATH
     db = get_database(demo_db_path)
 
     # Show initial database stats
@@ -244,7 +244,7 @@ def demo_file_outputs(analysis: FantasyAnalysis) -> None:
         print("Output directory not found")
 
     # Database file
-    demo_db_path = "demo_" + config.DATABASE_PATH
+    demo_db_path = config.DATABASE_PATH
     db_path = Path(demo_db_path)
     if db_path.exists():
         size_kb = db_path.stat().st_size / 1024
@@ -256,7 +256,7 @@ def demo_performance_metrics() -> None:
     print_section_header("PERFORMANCE METRICS")
 
     # Query performance test
-    demo_db_path = "demo_" + config.DATABASE_PATH
+    demo_db_path = config.DATABASE_PATH
     queries = get_queries(demo_db_path)
 
     print("Query performance test:")
@@ -307,7 +307,7 @@ def main():
             return
 
         # Step 3: Basic queries
-        demo_db_path = "demo_" + config.DATABASE_PATH
+        demo_db_path = config.DATABASE_PATH
         queries = get_queries(demo_db_path)
         demo_basic_queries(queries)
 

@@ -15,8 +15,7 @@ import espn
 
 # Configure logging
 logging.basicConfig(
-    level=getattr(logging, config.LOG_LEVEL.upper()),
-    format=config.LOG_FORMAT
+    level=getattr(logging, config.LOG_LEVEL.upper()), format=config.LOG_FORMAT
 )
 logger = logging.getLogger(__name__)
 
@@ -140,17 +139,21 @@ class DataIngestion:
             draft_file: Path to draft history JSON file (defaults to config.DRAFT_HISTORY_FILE)
         """
         try:
-            if draft_file is None:
-                draft_file = config.DRAFT_HISTORY_FILE
-            draft_path = Path(draft_file)
-            if not draft_path.exists():
-                raise IngestionError(f"Draft history file not found: {draft_file}")
 
-            with open(draft_path, "r") as f:
-                data = json.load(f)
+            data = espn.get_draft_history()
+            # if draft_file is None:
+            #     draft_file = config.DRAFT_HISTORY_FILE
+            # draft_path = Path(draft_file)
+            # if not draft_path.exists():
+            #     raise IngestionError(f"Draft history file not found: {draft_file}")
 
-            if not isinstance(data, list) or not data:
-                raise IngestionError("Draft history data should be a non-empty list")
+            # with open(draft_path, "r") as f:
+            #     data = json.load(f)
+
+            # if not isinstance(data, list) or not data:
+            #     raise IngestionError("Draft history data should be a non-empty list")
+            with open("./test.json", "w") as f:
+                f.write(json.dumps(data))
 
             # Extract draft details from the first league entry
             draft_detail = data[0].get("draftDetail", {})
@@ -172,6 +175,108 @@ class DataIngestion:
         except Exception as e:
             raise IngestionError(f"Unexpected error loading draft history: {e}")
 
+    def load_rosters(self) -> None:
+        try:
+            data = espn.get_rosters()
+            if len(data) == 0:
+                logger.warn("load_rosters: data is empty")
+                return
+
+            teams = data[0].get("teams", [])
+            for team in teams:
+                roster_entries = team.get("roster", {}).get("entries")
+                espn_team_id = team.get("id")
+                for roster_entry in roster_entries:
+                    self._load_player_stats(roster_entry)
+                    self._load_roster_entry(roster_entry, espn_team_id)
+            logger.info(f"Loaded player stats")
+        except Exception as e:
+            logger.error(f"Error in load_rosters: {e}")
+
+    def _load_player_stats(self, roster_entry: Dict[str, Any]) -> None:
+        """Update player fantasy score from roster entry data."""
+        try:
+            # Extract player ID and stats
+            player_id = roster_entry.get("playerId")
+            if not player_id:
+                return
+
+            player_pool_entry = roster_entry.get("playerPoolEntry", {})
+            player = player_pool_entry.get("player")
+            stats = player.get("stats", [])
+
+            if not stats or len(stats) == 0:
+                return
+
+            # Get the applied total from the first stats entry
+            fantasy_score = stats[0].get("appliedTotal", 0.0)
+
+            # Update the player's fantasy score in the database
+            query = """
+            UPDATE players 
+            SET fantasy_score = ? 
+            WHERE espn_player_id = ?
+            """
+
+            with self.db.get_connection() as conn:
+                cursor = conn.execute(query, (fantasy_score, player_id))
+                if cursor.rowcount > 0:
+                    conn.commit()
+                    logger.debug(
+                        f"Updated fantasy score {fantasy_score} for player {player_id}"
+                    )
+                else:
+                    logger.debug(f"Player {player_id} not found in database")
+
+        except Exception as e:
+            logger.warning(f"Error updating player stats for roster entry: {e}")
+
+    def _load_roster_entry(
+        self, roster_entry: Dict[str, Any], espn_team_id: int
+    ) -> None:
+        """Load roster entry into rosters table."""
+        try:
+            # Extract player ID
+            player_espn_id = roster_entry.get("playerId")
+            lineup_slot_id = roster_entry.get("lineupSlotId")
+            if not player_espn_id or not espn_team_id:
+                return
+
+            # Look up team_id from fantasy_teams table
+            team_query = "SELECT id FROM fantasy_teams WHERE espn_team_id = ?"
+            team_results = self.db.execute_query(team_query, (espn_team_id,))
+            if not team_results:
+                logger.debug(f"Team {espn_team_id} not found in database")
+                return
+            team_id = team_results[0]["id"]
+
+            # Look up player_id from players table
+            player_query = "SELECT id FROM players WHERE espn_player_id = ?"
+            player_results = self.db.execute_query(player_query, (player_espn_id,))
+            if not player_results:
+                logger.debug(f"Player {player_espn_id} not found in database")
+                return
+            player_id = player_results[0]["id"]
+
+            # Insert roster entry
+            roster_query = """
+            INSERT OR IGNORE INTO rosters (team_id, player_id, lineup_slot_id)
+            VALUES (?, ?, ?)
+            """
+
+            with self.db.get_connection() as conn:
+                cursor = conn.execute(
+                    roster_query, (team_id, player_id, lineup_slot_id)
+                )
+                conn.commit()
+                if cursor.rowcount > 0:
+                    logger.debug(
+                        f"Added roster entry: team {team_id}, player {player_id}"
+                    )
+
+        except Exception as e:
+            logger.warning(f"Error loading roster entry: {e}")
+
     def _load_fantasy_teams(self, teams: List[Dict[str, Any]]) -> int:
         """Extract and load fantasy teams from draft teams."""
         teams_data = set()  # Use set to avoid duplicates
@@ -184,16 +289,26 @@ class DataIngestion:
             ties = team.get("record").get("overall").get("ties")
             pointsFor = team.get("record").get("overall").get("pointsFor")
             pointsAgainst = team.get("record").get("overall").get("pointsAgainst")
+            finalPosition = team.get("rankCalculatedFinal")
 
             if team_id:
                 teams_data.add(
-                    (team_id, name, wins, losses, ties, pointsFor, pointsAgainst)
+                    (
+                        team_id,
+                        name,
+                        wins,
+                        losses,
+                        ties,
+                        pointsFor,
+                        pointsAgainst,
+                        finalPosition,
+                    )
                 )
 
         query = """
         INSERT OR IGNORE INTO fantasy_teams 
-        (espn_team_id, name, wins, losses, ties, points_for, points_against)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        (espn_team_id, name, wins, losses, ties, points_for, points_against, final_position)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         self.db.execute_many(query, list(teams_data))
@@ -388,7 +503,7 @@ class DataIngestion:
                 teams_file = config.TEAMS_FILE
             if draft_file is None:
                 draft_file = config.DRAFT_HISTORY_FILE
-                
+
             self.load_teams_data(teams_file)
 
             # Load players from API BEFORE draft picks (foreign key dependency)
@@ -396,6 +511,8 @@ class DataIngestion:
 
             # Load draft history (requires players to exist)
             self.load_draft_history(draft_file)
+
+            self.load_rosters()
 
             # Get final statistics
             stats = self.db.get_database_stats()

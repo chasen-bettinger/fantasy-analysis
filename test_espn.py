@@ -80,6 +80,24 @@ def analyze_data(data: Dict[str, Any], data_type: str) -> None:
                                     break
                     
                     print(f"  Position sample: {positions}")
+        
+        elif data_type == "rosters":
+            if isinstance(data, list) and data:
+                print(f"  Total league data entries: {len(data)}")
+                first_entry = data[0]
+                if "teams" in first_entry:
+                    teams = first_entry["teams"]
+                    print(f"  Teams found: {len(teams)}")
+                    if teams:
+                        sample_team = teams[0]
+                        print(f"  Sample team keys: {list(sample_team.keys())}")
+                        if "roster" in sample_team:
+                            roster = sample_team["roster"]
+                            if "entries" in roster:
+                                entries = roster["entries"]
+                                print(f"  Sample roster entries: {len(entries)}")
+                                if entries:
+                                    print(f"  Sample roster entry keys: {list(entries[0].keys())}")
     
     # Calculate data size
     data_str = json.dumps(data)
@@ -143,6 +161,26 @@ def test_players(client: ESPNClient, save_output: bool = False) -> bool:
         return False
 
 
+def test_rosters(client: ESPNClient, save_output: bool = False) -> bool:
+    """Test the rosters endpoint."""
+    print("Testing Rosters Endpoint...")
+    print("-" * 40)
+    
+    try:
+        data = client.get_rosters()
+        print("✅ Rosters fetch successful!")
+        analyze_data(data, "rosters")
+        
+        if save_output:
+            save_data(data, "rosters")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Rosters fetch failed: {e}")
+        return False
+
+
 def main():
     """Main test function with command line argument parsing."""
     parser = argparse.ArgumentParser(
@@ -152,7 +190,8 @@ def main():
 Examples:
   python test_espn.py --test-draft --verbose
   python test_espn.py --test-players --save-output  
-  python test_espn.py --test-both --verbose --save-output
+  python test_espn.py --test-rosters --verbose
+  python test_espn.py --test-all --verbose --save-output
         """
     )
     
@@ -169,9 +208,15 @@ Examples:
     )
     
     parser.add_argument(
-        '--test-both',
+        '--test-rosters',
         action='store_true',
-        help='Test both endpoints'
+        help='Test rosters endpoint'
+    )
+    
+    parser.add_argument(
+        '--test-all',
+        action='store_true',
+        help='Test all endpoints'
     )
     
     parser.add_argument(
@@ -189,8 +234,8 @@ Examples:
     args = parser.parse_args()
     
     # Set default if no specific test requested
-    if not (args.test_draft or args.test_players or args.test_both):
-        args.test_both = True
+    if not (args.test_draft or args.test_players or args.test_rosters or args.test_all):
+        args.test_all = True
     
     # Setup logging
     setup_logging(args.verbose)
@@ -211,14 +256,19 @@ Examples:
     success_count = 0
     total_tests = 0
     
-    if args.test_draft or args.test_both:
+    if args.test_draft or args.test_all:
         total_tests += 1
         if test_draft_history(client, args.save_output):
             success_count += 1
     
-    if args.test_players or args.test_both:
+    if args.test_players or args.test_all:
         total_tests += 1
         if test_players(client, args.save_output):
+            success_count += 1
+    
+    if args.test_rosters or args.test_all:
+        total_tests += 1
+        if test_rosters(client, args.save_output):
             success_count += 1
     
     # Print summary

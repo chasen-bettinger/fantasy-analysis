@@ -185,6 +185,31 @@ class ESPNClient:
             self.logger.error(f"Failed to fetch players data: {e}")
             raise
 
+    def get_rosters(self) -> Dict[str, Any]:
+        """
+        Fetch roster data from ESPN API.
+        
+        Returns:
+            Roster data as a dictionary
+            
+        Raises:
+            RequestException: If request fails
+            ValueError: If response is invalid
+        """
+        try:
+            url = self.config.get_roster_url()
+            self.logger.info(f"Fetching roster data from {url}")
+            
+            # Update headers for roster request
+            headers = self.config.get_espn_headers()
+            # headers["X-Fantasy-Filter"] = '{"teams":{"filterStatsForTopScoringPeriodIds":{"value":2,"additionalValue":["002015","102015","002014","1002014"]}}}'
+            
+            return self._make_request(url, headers)
+            
+        except Exception as e:
+            self.logger.error(f"Failed to fetch roster data: {e}")
+            raise
+
 
 # Create a default client instance
 _default_client = ESPNClient()
@@ -213,3 +238,15 @@ def get_players() -> Dict[str, Any]:
         Player data as a dictionary
     """
     return _default_client.get_players()
+
+
+def get_rosters() -> Dict[str, Any]:
+    """
+    Fetch roster data from ESPN API.
+    
+    This function maintains backward compatibility with the original API.
+    
+    Returns:
+        Roster data as a dictionary
+    """
+    return _default_client.get_rosters()

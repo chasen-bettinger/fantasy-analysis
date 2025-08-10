@@ -54,7 +54,18 @@ CREATE TABLE IF NOT EXISTS fantasy_teams (
     ties INTEGER,
     points_for INTEGER,
     points_against INTEGER,
+    final_position INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Rosters table
+CREATE TABLE IF NOT EXISTS rosters (
+    id INTEGER PRIMARY KEY,
+    team_id INTEGER,
+    player_id INTEGER,
+    lineup_slot_id INTEGER,
+    FOREIGN KEY (team_id) REFERENCES fantasy_teams (id)
+    FOREIGN KEY (player_id) REFERENCES players (id)
 );
 
 -- Players table
@@ -66,6 +77,7 @@ CREATE TABLE IF NOT EXISTS players (
     nfl_team_id INTEGER,
     eligibility_status TEXT,
     is_active BOOLEAN DEFAULT TRUE,
+    fantasy_score REAL DEFAULT 0.0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (nfl_team_id) REFERENCES nfl_teams (id)
 );
