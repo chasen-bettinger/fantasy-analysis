@@ -44,12 +44,13 @@ class FantasyAnalysis:
         self.output_dir = Path(config.OUTPUT_DIR)
         self.output_dir.mkdir(exist_ok=True)
 
-    def analyze_draft_patterns(self, save_plots: bool = True) -> Dict[str, Any]:
+    def analyze_draft_patterns(self, save_plots: bool = True, season: Optional[int] = None) -> Dict[str, Any]:
         """
         Analyze draft patterns and trends.
 
         Args:
             save_plots: Whether to save generated plots
+            season: Specific season to analyze (None for all seasons)
 
         Returns:
             Dictionary with analysis results
@@ -58,8 +59,8 @@ class FantasyAnalysis:
             logger.info("Analyzing draft patterns...")
 
             # Get data
-            draft_picks = self.queries.get_draft_picks_by_round()
-            position_trends = self.queries.get_position_draft_trends()
+            draft_picks = self.queries.get_draft_picks_by_round(season=season)
+            position_trends = self.queries.get_position_draft_trends(season=season)
 
             if draft_picks.empty:
                 raise AnalysisError("No draft pick data available for analysis")
@@ -161,12 +162,13 @@ class FantasyAnalysis:
 
         logger.info(f"Draft pattern plots saved to {self.output_dir}")
 
-    def analyze_team_strategies(self, save_plots: bool = True) -> Dict[str, Any]:
+    def analyze_team_strategies(self, save_plots: bool = True, season: Optional[int] = None) -> Dict[str, Any]:
         """
         Analyze fantasy team drafting strategies.
 
         Args:
             save_plots: Whether to save generated plots
+            season: Specific season to analyze (None for all seasons)
 
         Returns:
             Dictionary with team strategy analysis
@@ -174,7 +176,7 @@ class FantasyAnalysis:
         try:
             logger.info("Analyzing team strategies...")
 
-            team_summary = self.queries.get_team_draft_summary()
+            team_summary = self.queries.get_team_draft_summary(season=season)
 
             if team_summary.empty:
                 raise AnalysisError("No team data available for strategy analysis")
@@ -261,12 +263,13 @@ class FantasyAnalysis:
 
         logger.info(f"Team strategy plots saved to {self.output_dir}")
 
-    def analyze_position_scarcity(self, save_plots: bool = True) -> Dict[str, Any]:
+    def analyze_position_scarcity(self, save_plots: bool = True, season: Optional[int] = None) -> Dict[str, Any]:
         """
         Analyze position scarcity and draft timing.
 
         Args:
             save_plots: Whether to save generated plots
+            season: Specific season to analyze (None for all seasons)
 
         Returns:
             Dictionary with position scarcity analysis
@@ -274,8 +277,8 @@ class FantasyAnalysis:
         try:
             logger.info("Analyzing position scarcity...")
 
-            picks_by_position = self.queries.get_picks_by_position()
-            position_trends = self.queries.get_position_draft_trends()
+            picks_by_position = self.queries.get_picks_by_position(season=season)
+            position_trends = self.queries.get_position_draft_trends(season=season)
 
             if picks_by_position.empty:
                 raise AnalysisError("No position data available for scarcity analysis")
@@ -404,7 +407,7 @@ class FantasyAnalysis:
         logger.info(f"Position scarcity plots saved to {self.output_dir}")
 
     def analyze_team_performance_vs_scores(
-        self, save_plots: bool = True, only_starters: bool = True
+        self, save_plots: bool = True, only_starters: bool = True, season: Optional[int] = None
     ) -> Dict[str, Any]:
         """
         Analyze the relationship between player fantasy scores and team final standings.
@@ -414,6 +417,8 @@ class FantasyAnalysis:
 
         Args:
             save_plots: Whether to save generated plots
+            only_starters: Whether to include only starting lineup players
+            season: Specific season to analyze (None for all seasons)
 
         Returns:
             Dictionary with team performance vs scores analysis

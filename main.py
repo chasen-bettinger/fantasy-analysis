@@ -42,14 +42,17 @@ def setup_database(db_path: str) -> None:
 
 
 def ingest_data(
-    db_path: str, teams_file: str, draft_file: str, force_refresh: bool = False
+    db_path: str, teams_file: str, draft_file: str, force_refresh: bool = False, season: Optional[int] = None
 ) -> None:
     """Run data ingestion process."""
     try:
-        print("Starting data ingestion...")
+        season_msg = f" for season {season}" if season else ""
+        print(f"Starting data ingestion{season_msg}...")
         print(f"  Teams file: {teams_file}")
         print(f"  Draft file: {draft_file}")
         print(f"  Force player refresh: {force_refresh}")
+        if season:
+            print(f"  Season: {season}")
 
         # Check if files exist
         if not Path(teams_file).exists():
@@ -65,6 +68,7 @@ def ingest_data(
             teams_file=teams_file,
             draft_file=draft_file,
             force_player_refresh=force_refresh,
+            season=season,
         )
 
         print("Data ingestion completed successfully!")
@@ -77,13 +81,14 @@ def ingest_data(
         sys.exit(1)
 
 
-def run_queries(db_path: str, query_type: Optional[str] = None) -> None:
+def run_queries(db_path: str, query_type: Optional[str] = None, season: Optional[int] = None) -> None:
     """Run database queries and display results."""
     try:
         queries = get_queries(db_path)
+        season_msg = f" for season {season}" if season else ""
 
         if query_type == "summary" or query_type is None:
-            print("=== Database Summary ===")
+            print(f"=== Database Summary{season_msg} ===")
             summary = queries.get_database_summary()
 
             print("Table counts:")
@@ -95,8 +100,8 @@ def run_queries(db_path: str, query_type: Optional[str] = None) -> None:
                 print(f"  {pos_info['position']}: {pos_info['count']}")
 
         if query_type == "draft" or query_type is None:
-            print("\n=== Draft Analysis ===")
-            round_1 = queries.get_draft_picks_by_round(round_id=1)
+            print(f"\n=== Draft Analysis{season_msg} ===")
+            round_1 = queries.get_draft_picks_by_round(round_id=1, season=season)
 
             if not round_1.empty:
                 print(f"Round 1 picks ({len(round_1)} total):")
@@ -105,14 +110,15 @@ def run_queries(db_path: str, query_type: Optional[str] = None) -> None:
                     pos = pick.get("position", "N/A")
                     team = pick.get("nfl_team_abbrev", "N/A")
                     pick_num = pick.get("overall_pick_number", "N/A")
-                    print(f"  Pick {pick_num}: {player} ({pos}, {team})")
+                    season_info = pick.get("season", "N/A")
+                    print(f"  Pick {pick_num}: {player} ({pos}, {team}) [{season_info}]")
             else:
                 print("No draft picks found")
 
         if query_type == "positions":
-            print("\n=== Position Analysis ===")
+            print(f"\n=== Position Analysis{season_msg} ===")
             for position in ["QB", "RB", "WR", "TE", "K", "DST"]:
-                picks = queries.get_picks_by_position(position)
+                picks = queries.get_picks_by_position(position, season=season)
                 print(f"  {position}: {len(picks)} drafted")
 
     except QueryError as e:
@@ -121,15 +127,16 @@ def run_queries(db_path: str, query_type: Optional[str] = None) -> None:
 
 
 def run_analysis(
-    db_path: str, analysis_type: Optional[str] = None, save_plots: bool = True
+    db_path: str, analysis_type: Optional[str] = None, save_plots: bool = True, season: Optional[int] = None
 ) -> None:
     """Run statistical analysis and generate reports."""
     try:
         analysis = get_analysis(db_path)
+        season_msg = f" for season {season}" if season else ""
 
         if analysis_type == "patterns" or analysis_type is None:
-            print("=== Draft Pattern Analysis ===")
-            patterns = analysis.analyze_draft_patterns(save_plots=save_plots)
+            print(f"=== Draft Pattern Analysis{season_msg} ===")
+            patterns = analysis.analyze_draft_patterns(save_plots=save_plots, season=season)
 
             print(f"Total picks: {patterns.get('total_picks', 0)}")
             print(f"Rounds: {patterns.get('rounds_drafted', 0)}")
@@ -143,8 +150,8 @@ def run_analysis(
                 print(f"  {pos}: {count}")
 
         if analysis_type == "scarcity" or analysis_type is None:
-            print("\n=== Position Scarcity Analysis ===")
-            scarcity = analysis.analyze_position_scarcity(save_plots=save_plots)
+            print(f"\n=== Position Scarcity Analysis{season_msg} ===")
+            scarcity = analysis.analyze_position_scarcity(save_plots=save_plots, season=season)
 
             scores = scarcity.get("scarcity_score", {})
             print("Scarcity scores (higher = more scarce):")
@@ -152,7 +159,8 @@ def run_analysis(
                 print(f"  {pos}: {score:.2f}")
 
         if analysis_type == "full":
-            print("\n=== Comprehensive Analysis ===")
+            print(f"\n=== Comprehensive Analysis{season_msg} ===")
+            # Note: generate_comprehensive_report doesn't have season parameter yet, but individual analyses do
             report = analysis.generate_comprehensive_report(save_plots=save_plots)
 
             print(f"Analysis components: {len(report)}")
@@ -207,8 +215,11 @@ def main():
 Examples:
   python main.py setup                           # Initialize database
   python main.py ingest                         # Load data from JSON files
+  python main.py ingest --season 2016           # Load data for 2016 season
   python main.py query --type summary           # Show database summary
-  python main.py analyze --type patterns        # Analyze draft patterns
+  python main.py query --type draft -s 2015     # Show 2015 draft analysis
+  python main.py analyze --type patterns        # Analyze draft patterns (all seasons)
+  python main.py analyze --type patterns -s 2016 # Analyze 2016 draft patterns only
   python main.py analyze --type full --no-plots # Full analysis without plots
   python main.py status                         # Show database status
         """,
@@ -249,6 +260,10 @@ Examples:
     parser.add_argument(
         "--no-plots", action="store_true", help="Skip plot generation in analysis"
     )
+    
+    parser.add_argument(
+        "--season", "-s", type=int, help="Specific season year to process (e.g., 2015, 2016)"
+    )
 
     parser.add_argument(
         "--verbose", "-v", action="store_true", help="Enable verbose logging"
@@ -266,13 +281,13 @@ Examples:
             setup_database(args.db)
 
         elif args.command == "ingest":
-            ingest_data(args.db, args.teams_file, args.draft_file, args.force_refresh)
+            ingest_data(args.db, args.teams_file, args.draft_file, args.force_refresh, args.season)
 
         elif args.command == "query":
-            run_queries(args.db, args.type)
+            run_queries(args.db, args.type, args.season)
 
         elif args.command == "analyze":
-            run_analysis(args.db, args.type, not args.no_plots)
+            run_analysis(args.db, args.type, not args.no_plots, args.season)
 
         elif args.command == "status":
             show_status(args.db)

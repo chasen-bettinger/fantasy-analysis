@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS nfl_teams (
 -- Games table
 CREATE TABLE IF NOT EXISTS games (
     id INTEGER PRIMARY KEY,
-    espn_game_id INTEGER UNIQUE,
+    season INTEGER NOT NULL,  -- Season year (e.g., 2015, 2016, 2017)
+    espn_game_id INTEGER,
     home_team_id INTEGER NOT NULL,
     away_team_id INTEGER NOT NULL,
     game_date INTEGER NOT NULL,  -- Unix timestamp
@@ -41,13 +42,15 @@ CREATE TABLE IF NOT EXISTS games (
     valid_for_locking BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (home_team_id) REFERENCES nfl_teams (id),
-    FOREIGN KEY (away_team_id) REFERENCES nfl_teams (id)
+    FOREIGN KEY (away_team_id) REFERENCES nfl_teams (id),
+    UNIQUE(season, espn_game_id)  -- Unique per season
 );
 
--- Fantasy Teams table
+-- Fantasy Teams table 
 CREATE TABLE IF NOT EXISTS fantasy_teams (
     id INTEGER PRIMARY KEY,
-    espn_team_id INTEGER UNIQUE,
+    season INTEGER NOT NULL,  -- Season year (e.g., 2015, 2016, 2017)
+    espn_team_id INTEGER NOT NULL,
     name TEXT,
     wins INTEGER,
     losses INTEGER,
@@ -55,37 +58,43 @@ CREATE TABLE IF NOT EXISTS fantasy_teams (
     points_for INTEGER,
     points_against INTEGER,
     final_position INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(season, espn_team_id)  -- Unique per season
 );
 
--- Rosters table
+-- Rosters table 
 CREATE TABLE IF NOT EXISTS rosters (
     id INTEGER PRIMARY KEY,
     team_id INTEGER,
     player_id INTEGER,
     lineup_slot_id INTEGER,
-    FOREIGN KEY (team_id) REFERENCES fantasy_teams (id)
-    FOREIGN KEY (player_id) REFERENCES players (id)
+    season INTEGER NOT NULL,  -- Season year for direct filtering
+    FOREIGN KEY (team_id) REFERENCES fantasy_teams (id),
+    FOREIGN KEY (player_id) REFERENCES players (id),
+    UNIQUE(season, team_id, player_id, lineup_slot_id)  -- Unique roster entry per season
 );
 
--- Players table
+-- Players table 
 CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY,
-    espn_player_id INTEGER UNIQUE NOT NULL,
+    espn_player_id INTEGER NOT NULL,
     name TEXT NOT NULL,
     position TEXT,  -- QB, RB, WR, TE, K, DST
     nfl_team_id INTEGER,
     eligibility_status TEXT,
     is_active BOOLEAN DEFAULT TRUE,
     fantasy_score REAL DEFAULT 0.0,
+    season INTEGER
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (nfl_team_id) REFERENCES nfl_teams (id)
+    UNIQUE(season, espn_player_id)
 );
 
 -- Draft Picks table
 CREATE TABLE IF NOT EXISTS draft_picks (
     id INTEGER PRIMARY KEY,
-    espn_pick_id INTEGER UNIQUE,
+    season INTEGER NOT NULL,  -- Season year for direct filtering
+    espn_pick_id INTEGER,
     player_id INTEGER,
     fantasy_team_id INTEGER,
     round_id INTEGER NOT NULL,
@@ -96,14 +105,20 @@ CREATE TABLE IF NOT EXISTS draft_picks (
     auto_draft_type_id INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (player_id) REFERENCES players (id),
-    FOREIGN KEY (fantasy_team_id) REFERENCES fantasy_teams (id)
+    FOREIGN KEY (fantasy_team_id) REFERENCES fantasy_teams (id),
+    UNIQUE(season, espn_pick_id)  -- Unique pick per season
 );
 
--- Indexes for performance
+-- Indexes for performance 
+CREATE INDEX IF NOT EXISTS idx_games_season ON games (season);
 CREATE INDEX IF NOT EXISTS idx_games_teams ON games (home_team_id, away_team_id);
 CREATE INDEX IF NOT EXISTS idx_games_date ON games (game_date);
+CREATE INDEX IF NOT EXISTS idx_fantasy_teams_season ON fantasy_teams (season);
+CREATE INDEX IF NOT EXISTS idx_fantasy_teams_season_espn ON fantasy_teams (season, espn_team_id);
+CREATE INDEX IF NOT EXISTS idx_rosters_season ON rosters (season);
 CREATE INDEX IF NOT EXISTS idx_players_team ON players (nfl_team_id);
 CREATE INDEX IF NOT EXISTS idx_players_position ON players (position);
+CREATE INDEX IF NOT EXISTS idx_draft_picks_season ON draft_picks (season);
 CREATE INDEX IF NOT EXISTS idx_draft_picks_player ON draft_picks (player_id);
 CREATE INDEX IF NOT EXISTS idx_draft_picks_team ON draft_picks (fantasy_team_id);
 CREATE INDEX IF NOT EXISTS idx_draft_picks_round ON draft_picks (round_id, round_pick_number);

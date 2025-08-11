@@ -34,18 +34,22 @@ class FantasyQueries:
         """
         self.db = db
 
-    def get_draft_picks_by_round(self, round_id: Optional[int] = None) -> pd.DataFrame:
+    def get_draft_picks_by_round(
+        self, round_id: Optional[int] = None, season: Optional[int] = None
+    ) -> pd.DataFrame:
         """
         Get draft picks by round with player and team information.
 
         Args:
             round_id: Specific round to query (None for all rounds)
+            season: Specific season to query (None for all seasons)
 
         Returns:
             DataFrame with draft pick details
         """
         base_query = """
         SELECT 
+            dp.season,
             dp.round_id,
             dp.round_pick_number,
             dp.overall_pick_number,
@@ -62,14 +66,28 @@ class FantasyQueries:
         LEFT JOIN fantasy_teams ft ON dp.fantasy_team_id = ft.id
         """
 
+        conditions = []
+        params = []
+
         if round_id is not None:
+            conditions.append("dp.round_id = ?")
+            params.append(round_id)
+
+        if season is not None:
+            conditions.append("dp.season = ?")
+            params.append(season)
+
+        if conditions:
             query = (
-                base_query + " WHERE dp.round_id = ? ORDER BY dp.overall_pick_number"
+                base_query
+                + " WHERE "
+                + " AND ".join(conditions)
+                + " ORDER BY dp.overall_pick_number"
             )
-            params = (round_id,)
         else:
             query = base_query + " ORDER BY dp.overall_pick_number"
-            params = ()
+
+        params = tuple(params)
 
         try:
             results = self.db.execute_query(query, params)
@@ -77,18 +95,22 @@ class FantasyQueries:
         except DatabaseError as e:
             raise QueryError(f"Failed to query draft picks by round: {e}")
 
-    def get_picks_by_position(self, position: Optional[str] = None) -> pd.DataFrame:
+    def get_picks_by_position(
+        self, position: Optional[str] = None, season: Optional[int] = None
+    ) -> pd.DataFrame:
         """
         Get draft picks grouped by position.
 
         Args:
             position: Specific position to query (None for all positions)
+            season: Specific season to query (None for all seasons)
 
         Returns:
             DataFrame with picks by position
         """
         base_query = """
         SELECT 
+            dp.season,
             p.position,
             dp.round_id,
             dp.overall_pick_number,
@@ -102,12 +124,28 @@ class FantasyQueries:
         WHERE p.position IS NOT NULL
         """
 
+        conditions = []
+        params = []
+
         if position:
-            query = base_query + " AND p.position = ? ORDER BY dp.overall_pick_number"
-            params = (position,)
+            conditions.append("p.position = ?")
+            params.append(position)
+
+        if season is not None:
+            conditions.append("dp.season = ?")
+            params.append(season)
+
+        if conditions:
+            query = (
+                base_query
+                + " AND "
+                + " AND ".join(conditions)
+                + " ORDER BY p.position, dp.overall_pick_number"
+            )
         else:
             query = base_query + " ORDER BY p.position, dp.overall_pick_number"
-            params = ()
+
+        params = tuple(params)
 
         try:
             results = self.db.execute_query(query, params)
@@ -116,19 +154,21 @@ class FantasyQueries:
             raise QueryError(f"Failed to query picks by position: {e}")
 
     def get_team_draft_summary(
-        self, fantasy_team_id: Optional[int] = None
+        self, fantasy_team_id: Optional[int] = None, season: Optional[int] = None
     ) -> pd.DataFrame:
         """
         Get draft summary by fantasy team.
 
         Args:
             fantasy_team_id: Specific team to query (None for all teams)
+            season: Specific season to query (None for all seasons)
 
         Returns:
             DataFrame with team draft summaries
         """
         base_query = """
         SELECT 
+            ft.season,
             ft.name as fantasy_team_name,
             COUNT(CASE WHEN p.position = 'QB' THEN 1 END) as qb_picks,
             COUNT(CASE WHEN p.position = 'RB' THEN 1 END) as rb_picks,
@@ -143,12 +183,31 @@ class FantasyQueries:
         LEFT JOIN players p ON p.id = dp.player_id
         """
 
+        conditions = []
+        params = []
+
         if fantasy_team_id is not None:
-            query = base_query + " WHERE ft.id = ? GROUP BY ft.id, ft.name"
-            params = (fantasy_team_id,)
+            conditions.append("ft.id = ?")
+            params.append(fantasy_team_id)
+
+        if season is not None:
+            conditions.append("ft.season = ?")
+            params.append(season)
+
+        group_by = " GROUP BY ft.id, ft.name, ft.season"
+
+        if conditions:
+            query = (
+                base_query
+                + " WHERE "
+                + " AND ".join(conditions)
+                + group_by
+                + " ORDER BY ft.name"
+            )
         else:
-            query = base_query + " GROUP BY ft.id, ft.name ORDER BY ft.name"
-            params = ()
+            query = base_query + group_by + " ORDER BY ft.season, ft.name"
+
+        params = tuple(params)
 
         try:
             results = self.db.execute_query(query, params)
@@ -156,15 +215,19 @@ class FantasyQueries:
         except DatabaseError as e:
             raise QueryError(f"Failed to query team draft summary: {e}")
 
-    def get_position_draft_trends(self) -> pd.DataFrame:
+    def get_position_draft_trends(self, season: Optional[int] = None) -> pd.DataFrame:
         """
         Get draft trends by position across rounds.
+
+        Args:
+            season: Specific season to query (None for all seasons)
 
         Returns:
             DataFrame with position trends by round
         """
-        query = """
+        base_query = """
         SELECT 
+            dp.season,
             dp.round_id,
             p.position,
             COUNT(*) as picks_count,
@@ -174,24 +237,40 @@ class FantasyQueries:
         FROM draft_picks dp
         LEFT JOIN players p ON dp.player_id = p.id
         WHERE p.position IS NOT NULL
-        GROUP BY dp.round_id, p.position
-        ORDER BY dp.round_id, picks_count DESC
         """
 
+        if season is not None:
+            query = (
+                base_query
+                + " AND dp.season = ? GROUP BY dp.season, dp.round_id, p.position ORDER BY dp.round_id, picks_count DESC"
+            )
+            params = (season,)
+        else:
+            query = (
+                base_query
+                + " GROUP BY dp.season, dp.round_id, p.position ORDER BY dp.season, dp.round_id, picks_count DESC"
+            )
+            params = ()
+
         try:
-            results = self.db.execute_query(query)
+            results = self.db.execute_query(query, params)
             return pd.DataFrame([dict(row) for row in results])
         except DatabaseError as e:
             raise QueryError(f"Failed to query position draft trends: {e}")
 
-    def get_nfl_team_draft_distribution(self) -> pd.DataFrame:
+    def get_nfl_team_draft_distribution(
+        self, season: Optional[int] = None
+    ) -> pd.DataFrame:
         """
         Get distribution of drafted players by NFL team.
+
+        Args:
+            season: Specific season to query (None for all seasons)
 
         Returns:
             DataFrame with NFL team draft distribution
         """
-        query = """
+        base_query = """
         SELECT 
             nt.name as nfl_team_name,
             nt.abbreviation,
@@ -205,41 +284,69 @@ class FantasyQueries:
         LEFT JOIN players p ON dp.player_id = p.id
         LEFT JOIN nfl_teams nt ON p.nfl_team_id = nt.id
         WHERE nt.name IS NOT NULL
-        GROUP BY nt.id, nt.name, nt.abbreviation
-        ORDER BY players_drafted DESC
         """
 
+        if season is not None:
+            query = (
+                base_query
+                + " AND dp.season = ? GROUP BY nt.id, nt.name, nt.abbreviation ORDER BY players_drafted DESC"
+            )
+            params = (season,)
+        else:
+            query = (
+                base_query
+                + " GROUP BY nt.id, nt.name, nt.abbreviation ORDER BY players_drafted DESC"
+            )
+            params = ()
+
         try:
-            results = self.db.execute_query(query)
+            results = self.db.execute_query(query, params)
             return pd.DataFrame([dict(row) for row in results])
         except DatabaseError as e:
             raise QueryError(f"Failed to query NFL team draft distribution: {e}")
 
-    def get_draft_pick_value_analysis(self) -> pd.DataFrame:
+    def get_draft_pick_value_analysis(
+        self, season: Optional[int] = None
+    ) -> pd.DataFrame:
         """
         Analyze draft pick values and patterns.
+
+        Args:
+            season: Specific season to query (None for all seasons)
 
         Returns:
             DataFrame with draft value analysis
         """
-        query = """
+        base_query = """
         SELECT 
+            dp.season,
             dp.round_id,
             p.position,
             COUNT(*) as position_picks_in_round,
             MIN(dp.overall_pick_number) as first_pick,
             MAX(dp.overall_pick_number) as last_pick,
             AVG(dp.overall_pick_number) as avg_pick,
-            COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY dp.round_id) as round_percentage
+            COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY dp.season, dp.round_id) as round_percentage
         FROM draft_picks dp
         LEFT JOIN players p ON dp.player_id = p.id
         WHERE p.position IS NOT NULL
-        GROUP BY dp.round_id, p.position
-        ORDER BY dp.round_id, position_picks_in_round DESC
         """
 
+        if season is not None:
+            query = (
+                base_query
+                + " AND dp.season = ? GROUP BY dp.season, dp.round_id, p.position ORDER BY dp.round_id, position_picks_in_round DESC"
+            )
+            params = (season,)
+        else:
+            query = (
+                base_query
+                + " GROUP BY dp.season, dp.round_id, p.position ORDER BY dp.season, dp.round_id, position_picks_in_round DESC"
+            )
+            params = ()
+
         try:
-            results = self.db.execute_query(query)
+            results = self.db.execute_query(query, params)
             return pd.DataFrame([dict(row) for row in results])
         except DatabaseError as e:
             raise QueryError(f"Failed to query draft pick value analysis: {e}")

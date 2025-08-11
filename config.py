@@ -6,7 +6,7 @@ Loads settings from environment variables and .env file with sensible defaults.
 
 import os
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -22,8 +22,27 @@ class Config:
 
     # ESPN API Configuration
     ESPN_LEAGUE_ID: str = os.getenv("ESPN_LEAGUE_ID", "730477")
-    ESPN_SEASON: str = os.getenv("ESPN_SEASON", "2015")
+    ESPN_SEASON: str = os.getenv("ESPN_SEASON", "2015")  # Default season for backward compatibility
     ESPN_TEAM_ID: str = os.getenv("ESPN_TEAM_ID", "10")
+    
+    # Multi-season Configuration
+    SUPPORTED_SEASONS: List[int] = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+    DEFAULT_SEASON: int = int(os.getenv("DEFAULT_SEASON", ESPN_SEASON))
+    
+    @classmethod
+    def get_current_season(cls) -> int:
+        """Get the current default season as integer."""
+        return cls.DEFAULT_SEASON
+    
+    @classmethod
+    def get_all_seasons(cls) -> List[int]:
+        """Get list of all supported seasons."""
+        return cls.SUPPORTED_SEASONS.copy()
+    
+    @classmethod
+    def is_valid_season(cls, season: int) -> bool:
+        """Check if a season is valid/supported."""
+        return season in cls.SUPPORTED_SEASONS
 
     # ESPN API Headers
     ESPN_USER_AGENT: str = os.getenv(
@@ -96,30 +115,36 @@ class Config:
         return headers
 
     @classmethod
-    def get_roster_url(cls) -> str:
-        """Get ESPN draft history API URL."""
+    def get_roster_url(cls, season: Optional[int] = None) -> str:
+        """Get ESPN roster API URL."""
+        if season is None:
+            season = cls.DEFAULT_SEASON
         return (
             f"https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/leagueHistory/{cls.ESPN_LEAGUE_ID}"
             f"?rosterForTeamId=1&rosterForTeamId=2&rosterForTeamId=3&rosterForTeamId=4&rosterForTeamId=5"
             f"&rosterForTeamId=6&rosterForTeamId=7&rosterForTeamId=8&rosterForTeamId=9&rosterForTeamId=10"
-            f"&rosterForTeamId=11&rosterForTeamId=12&view=mRoster&seasonId={cls.ESPN_SEASON}"
+            f"&rosterForTeamId=11&rosterForTeamId=12&view=mRoster&seasonId={season}"
         )
 
     @classmethod
-    def get_draft_history_url(cls) -> str:
+    def get_draft_history_url(cls, season: Optional[int] = None) -> str:
         """Get ESPN draft history API URL."""
+        if season is None:
+            season = cls.DEFAULT_SEASON
         return (
             f"https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/leagueHistory/{cls.ESPN_LEAGUE_ID}"
             f"?view=mDraftDetail&view=mLiveScoring&view=mMatchupScore"
             f"&view=mPendingTransactions&view=mPositionalRatings&view=mSettings"
-            f"&view=mTeam&view=modular&view=mNav&seasonId={cls.ESPN_SEASON}"
+            f"&view=mTeam&view=modular&view=mNav&seasonId={season}"
         )
 
     @classmethod
-    def get_players_url(cls) -> str:
+    def get_players_url(cls, season: Optional[int] = None) -> str:
         """Get ESPN players API URL."""
+        if season is None:
+            season = cls.DEFAULT_SEASON
         return (
-            f"https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/{cls.ESPN_SEASON}/players"
+            f"https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/{season}/players"
             f"?scoringPeriodId=0&view=players_wl"
         )
 
@@ -159,6 +184,8 @@ class Config:
             "database_path": cls.DATABASE_PATH,
             "espn_league_id": cls.ESPN_LEAGUE_ID,
             "espn_season": cls.ESPN_SEASON,
+            "default_season": cls.DEFAULT_SEASON,
+            "supported_seasons": cls.SUPPORTED_SEASONS,
             "teams_file": cls.TEAMS_FILE,
             "draft_file": cls.DRAFT_HISTORY_FILE,
             "output_dir": cls.OUTPUT_DIR,

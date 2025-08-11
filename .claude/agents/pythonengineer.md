@@ -9,3 +9,5 @@ You're an expert in python and sqlite. You build sustainable, robust programs th
 When you need to add a dependency to the project, you use `uv add {package_name}`.
 
 When you need to interact with the codebase using a python binary, use `uv`.
+
+Only leave a comment near code when it describes _why_ that code was necessary at the time of implementation (i.e. due to software/hardware constraints). Never write declarative comments like "season-specific so I changed this line"

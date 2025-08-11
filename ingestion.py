@@ -38,16 +38,20 @@ class DataIngestion:
         """
         self.db = db
 
-    def load_teams_data(self, teams_file: str = None) -> None:
+    def load_teams_data(self, teams_file: str = None, season: int = None) -> None:
         """
         Load NFL teams and games data from teams file.
 
         Args:
             teams_file: Path to teams JSON file (defaults to config.TEAMS_FILE)
+            season: Season year for games (defaults to config.DEFAULT_SEASON)
         """
         try:
             if teams_file is None:
                 teams_file = config.TEAMS_FILE
+            if season is None:
+                season = config.get_current_season()
+
             teams_path = Path(teams_file)
             if not teams_path.exists():
                 raise IngestionError(f"Teams file not found: {teams_file}")
@@ -56,15 +60,15 @@ class DataIngestion:
                 data = json.load(f)
 
             pro_teams = data.get("proTeams", [])
-            logger.info(f"Loading {len(pro_teams)} NFL teams")
+            logger.info(f"Loading {len(pro_teams)} NFL teams for season {season}")
 
             # Load teams
             teams_loaded = self._load_nfl_teams(pro_teams)
             logger.info(f"Loaded {teams_loaded} NFL teams")
 
             # Load games
-            games_loaded = self._load_games(pro_teams)
-            logger.info(f"Loaded {games_loaded} games")
+            games_loaded = self._load_games(pro_teams, season)
+            logger.info(f"Loaded {games_loaded} games for season {season}")
 
         except (json.JSONDecodeError, KeyError) as e:
             raise IngestionError(f"Error parsing teams data: {e}")
@@ -96,7 +100,7 @@ class DataIngestion:
         self.db.execute_many(query, teams_data)
         return len(teams_data)
 
-    def _load_games(self, pro_teams: List[Dict[str, Any]]) -> int:
+    def _load_games(self, pro_teams: List[Dict[str, Any]], season: int) -> int:
         """Load games from pro teams data."""
         games_data = []
 
@@ -107,6 +111,7 @@ class DataIngestion:
                 for game in games:
                     games_data.append(
                         (
+                            season,  # Add season as first parameter
                             game.get("id"),
                             game.get("homeProTeamId"),
                             game.get("awayProTeamId"),
@@ -119,28 +124,33 @@ class DataIngestion:
                     )
 
         # Remove duplicates (same game can appear in multiple teams' data)
-        unique_games = {game[0]: game for game in games_data}.values()
+        unique_games = {
+            (game[0], game[1]): game for game in games_data
+        }.values()  # Use season+game_id as key
 
         query = """
         INSERT OR IGNORE INTO games 
-        (espn_game_id, home_team_id, away_team_id, game_date, scoring_period_id,
+        (season, espn_game_id, home_team_id, away_team_id, game_date, scoring_period_id,
          start_time_tbd, stats_official, valid_for_locking)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         self.db.execute_many(query, list(unique_games))
         return len(unique_games)
 
-    def load_draft_history(self, draft_file: str = None) -> None:
+    def load_draft_history(self, draft_file: str = None, season: int = None) -> None:
         """
         Load draft history data from JSON file.
 
         Args:
             draft_file: Path to draft history JSON file (defaults to config.DRAFT_HISTORY_FILE)
+            season: Season year for draft data (defaults to config.DEFAULT_SEASON)
         """
         try:
+            if season is None:
+                season = config.get_current_season()
 
-            data = espn.get_draft_history()
+            data = espn.get_draft_history(season)
             # if draft_file is None:
             #     draft_file = config.DRAFT_HISTORY_FILE
             # draft_path = Path(draft_file)
@@ -158,24 +168,27 @@ class DataIngestion:
             picks = draft_detail.get("picks", [])
             teams = data[0].get("teams", [])
 
-            logger.info(f"Loading {len(teams)} teams...")
+            logger.info(f"Loading {len(teams)} teams for season {season}...")
 
             # Load fantasy teams first (extract from picks data)
-            teams_loaded = self._load_fantasy_teams(teams)
-            logger.info(f"Loaded {teams_loaded} fantasy teams")
+            teams_loaded = self._load_fantasy_teams(teams, season)
+            logger.info(f"Loaded {teams_loaded} fantasy teams for season {season}")
 
             # Load draft picks
-            picks_loaded = self._load_draft_picks(picks)
-            logger.info(f"Loaded {picks_loaded} draft picks")
+            picks_loaded = self._load_draft_picks(picks, season)
+            logger.info(f"Loaded {picks_loaded} draft picks for season {season}")
 
         except (json.JSONDecodeError, KeyError) as e:
             raise IngestionError(f"Error parsing draft history data: {e}")
         except Exception as e:
             raise IngestionError(f"Unexpected error loading draft history: {e}")
 
-    def load_rosters(self) -> None:
+    def load_rosters(self, season: int = None) -> None:
         try:
-            data = espn.get_rosters()
+            if season is None:
+                season = config.get_current_season()
+
+            data = espn.get_rosters(season)
             if len(data) == 0:
                 logger.warn("load_rosters: data is empty")
                 return
@@ -185,13 +198,13 @@ class DataIngestion:
                 roster_entries = team.get("roster", {}).get("entries")
                 espn_team_id = team.get("id")
                 for roster_entry in roster_entries:
-                    self._load_player_stats(roster_entry)
-                    self._load_roster_entry(roster_entry, espn_team_id)
-            logger.info(f"Loaded player stats")
+                    self._load_player_stats(roster_entry, season)
+                    self._load_roster_entry(roster_entry, espn_team_id, season)
+            logger.info(f"Loaded player stats for season {season}")
         except Exception as e:
             logger.error(f"Error in load_rosters: {e}")
 
-    def _load_player_stats(self, roster_entry: Dict[str, Any]) -> None:
+    def _load_player_stats(self, roster_entry: Dict[str, Any], season: int) -> None:
         """Update player fantasy score from roster entry data."""
         try:
             # Extract player ID and stats
@@ -214,10 +227,11 @@ class DataIngestion:
             UPDATE players 
             SET fantasy_score = ? 
             WHERE espn_player_id = ?
+            AND season = ?
             """
 
             with self.db.get_connection() as conn:
-                cursor = conn.execute(query, (fantasy_score, player_id))
+                cursor = conn.execute(query, (fantasy_score, player_id, season))
                 if cursor.rowcount > 0:
                     conn.commit()
                     logger.debug(
@@ -230,7 +244,7 @@ class DataIngestion:
             logger.warning(f"Error updating player stats for roster entry: {e}")
 
     def _load_roster_entry(
-        self, roster_entry: Dict[str, Any], espn_team_id: int
+        self, roster_entry: Dict[str, Any], espn_team_id: int, season: int
     ) -> None:
         """Load roster entry into rosters table."""
         try:
@@ -240,11 +254,15 @@ class DataIngestion:
             if not player_espn_id or not espn_team_id:
                 return
 
-            # Look up team_id from fantasy_teams table
-            team_query = "SELECT id FROM fantasy_teams WHERE espn_team_id = ?"
-            team_results = self.db.execute_query(team_query, (espn_team_id,))
+            # Look up team_id from fantasy_teams table for this season
+            team_query = (
+                "SELECT id FROM fantasy_teams WHERE espn_team_id = ? AND season = ?"
+            )
+            team_results = self.db.execute_query(team_query, (espn_team_id, season))
             if not team_results:
-                logger.debug(f"Team {espn_team_id} not found in database")
+                logger.debug(
+                    f"Team {espn_team_id} not found in database for season {season}"
+                )
                 return
             team_id = team_results[0]["id"]
 
@@ -258,24 +276,24 @@ class DataIngestion:
 
             # Insert roster entry
             roster_query = """
-            INSERT OR IGNORE INTO rosters (team_id, player_id, lineup_slot_id)
-            VALUES (?, ?, ?)
+            INSERT OR IGNORE INTO rosters (team_id, player_id, lineup_slot_id, season)
+            VALUES (?, ?, ?, ?)
             """
 
             with self.db.get_connection() as conn:
                 cursor = conn.execute(
-                    roster_query, (team_id, player_id, lineup_slot_id)
+                    roster_query, (team_id, player_id, lineup_slot_id, season)
                 )
                 conn.commit()
                 if cursor.rowcount > 0:
                     logger.debug(
-                        f"Added roster entry: team {team_id}, player {player_id}"
+                        f"Added roster entry: team {team_id}, player {player_id}, season {season}"
                     )
 
         except Exception as e:
             logger.warning(f"Error loading roster entry: {e}")
 
-    def _load_fantasy_teams(self, teams: List[Dict[str, Any]]) -> int:
+    def _load_fantasy_teams(self, teams: List[Dict[str, Any]], season: int) -> int:
         """Extract and load fantasy teams from draft teams."""
         teams_data = set()  # Use set to avoid duplicates
 
@@ -292,6 +310,7 @@ class DataIngestion:
             if team_id:
                 teams_data.add(
                     (
+                        season,  # Add season as first parameter
                         team_id,
                         name,
                         wins,
@@ -305,20 +324,20 @@ class DataIngestion:
 
         query = """
         INSERT OR IGNORE INTO fantasy_teams 
-        (espn_team_id, name, wins, losses, ties, points_for, points_against, final_position)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        (season, espn_team_id, name, wins, losses, ties, points_for, points_against, final_position)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
         self.db.execute_many(query, list(teams_data))
         return len(teams_data)
 
-    def _load_draft_picks(self, picks: List[Dict[str, Any]]) -> int:
+    def _load_draft_picks(self, picks: List[Dict[str, Any]], season: int) -> int:
         """Load draft picks into database."""
         picks_data = []
 
         # Get lookup maps for player and fantasy team database IDs
         player_id_map = self._get_player_id_mapping()
-        fantasy_team_id_map = self._get_fantasy_team_id_mapping()
+        fantasy_team_id_map = self._get_fantasy_team_id_mapping(season)
 
         for pick in picks:
             espn_player_id = pick.get("playerId")
@@ -336,12 +355,13 @@ class DataIngestion:
                 continue
             if db_fantasy_team_id is None:
                 logger.warning(
-                    f"Fantasy team ID {espn_team_id} not found in fantasy_teams table, skipping pick {pick.get('id')}"
+                    f"Fantasy team ID {espn_team_id} not found in fantasy_teams table for season {season}, skipping pick {pick.get('id')}"
                 )
                 continue
 
             picks_data.append(
                 (
+                    season,  # Add season as first parameter
                     pick.get("id"),
                     db_player_id,  # Use database player ID
                     db_fantasy_team_id,  # Use database fantasy team ID
@@ -357,9 +377,9 @@ class DataIngestion:
         if picks_data:
             query = """
             INSERT OR IGNORE INTO draft_picks 
-            (espn_pick_id, player_id, fantasy_team_id, round_id, round_pick_number,
+            (season, espn_pick_id, player_id, fantasy_team_id, round_id, round_pick_number,
              overall_pick_number, lineup_slot_id, is_keeper, auto_draft_type_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
 
             try:
@@ -374,7 +394,7 @@ class DataIngestion:
 
         return len(picks_data)
 
-    def load_players_data(self, force_refresh: bool = False) -> None:
+    def load_players_data(self, season: int, force_refresh: bool = False) -> None:
         """
         Load players data from ESPN API.
 
@@ -383,7 +403,15 @@ class DataIngestion:
         """
         try:
             # Check if we already have player data
-            player_count = self.db.get_table_count("players")
+            player_count_rows = self.db.execute_query(
+                """
+                SELECT COUNT(*) as count 
+                FROM players
+                WHERE season = ? 
+            """,
+                (season,),
+            )
+            player_count = player_count_rows[0]["count"]
             if player_count > 0 and not force_refresh:
                 logger.info(
                     f"Found {player_count} existing players, skipping API call. Use force_refresh=True to reload."
@@ -391,7 +419,7 @@ class DataIngestion:
                 return
 
             logger.info("Fetching player data from ESPN API...")
-            players_data = espn.get_players()
+            players_data = espn.get_players(season)
 
             if not players_data:
                 raise IngestionError("No player data received from ESPN API")
@@ -399,13 +427,13 @@ class DataIngestion:
             with open(config.PLAYERS_CACHE_FILE, "w") as f:
                 f.write(json.dumps(players_data))
 
-            players_loaded = self._load_players(players_data)
+            players_loaded = self._load_players(season, players_data)
             logger.info(f"Loaded {players_loaded} players from ESPN API")
 
         except Exception as e:
             raise IngestionError(f"Error loading players from ESPN API: {e}")
 
-    def _load_players(self, players_data: List[Dict[str, Any]]) -> int:
+    def _load_players(self, season: int, players_data: List[Dict[str, Any]]) -> int:
         """Load players data into database."""
         players_list = []
 
@@ -434,14 +462,14 @@ class DataIngestion:
             is_active = status == "ACTIVE"
 
             players_list.append(
-                (player_id, name, position, pro_team_id, status, is_active)
+                (player_id, name, position, pro_team_id, status, is_active, season)
             )
 
         if players_list:
             query = """
             INSERT OR REPLACE INTO players 
-            (espn_player_id, name, position, nfl_team_id, eligibility_status, is_active)
-            VALUES (?, ?, ?, ?, ?, ?)
+            (espn_player_id, name, position, nfl_team_id, eligibility_status, is_active, season)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             """
 
             self.db.execute_many(query, players_list)
@@ -470,10 +498,14 @@ class DataIngestion:
         results = self.db.execute_query(query)
         return {row["espn_player_id"]: row["id"] for row in results}
 
-    def _get_fantasy_team_id_mapping(self) -> Dict[int, int]:
+    def _get_fantasy_team_id_mapping(self, season: int = None) -> Dict[int, int]:
         """Get mapping of ESPN team IDs to database fantasy team IDs."""
-        query = "SELECT id, espn_team_id FROM fantasy_teams"
-        results = self.db.execute_query(query)
+        if season is None:
+            query = "SELECT id, espn_team_id FROM fantasy_teams"
+            results = self.db.execute_query(query)
+        else:
+            query = "SELECT id, espn_team_id FROM fantasy_teams WHERE season = ?"
+            results = self.db.execute_query(query, (season,))
         return {row["espn_team_id"]: row["id"] for row in results}
 
     def run_full_ingestion(
@@ -481,6 +513,7 @@ class DataIngestion:
         teams_file: str = None,
         draft_file: str = None,
         force_player_refresh: bool = False,
+        season: int = None,
     ) -> Dict[str, int]:
         """
         Run complete data ingestion process.
@@ -489,32 +522,36 @@ class DataIngestion:
             teams_file: Path to teams JSON file (defaults to config.TEAMS_FILE)
             draft_file: Path to draft history JSON file (defaults to config.DRAFT_HISTORY_FILE)
             force_player_refresh: Whether to refresh player data from API
+            season: Season year (defaults to config.DEFAULT_SEASON)
 
         Returns:
             Dictionary with ingestion statistics
         """
-        logger.info("Starting full data ingestion...")
-
         try:
+            if season is None:
+                season = config.get_current_season()
+
             # Load teams and games data first
             if teams_file is None:
                 teams_file = config.TEAMS_FILE
             if draft_file is None:
                 draft_file = config.DRAFT_HISTORY_FILE
 
-            self.load_teams_data(teams_file)
+            logger.info(f"Starting full data ingestion for season {season}...")
+
+            self.load_teams_data(teams_file, season)
 
             # Load players from API BEFORE draft picks (foreign key dependency)
-            self.load_players_data(force_player_refresh)
+            self.load_players_data(season, force_player_refresh)
 
             # Load draft history (requires players to exist)
-            self.load_draft_history(draft_file)
+            self.load_draft_history(draft_file, season)
 
-            self.load_rosters()
+            self.load_rosters(season)
 
             # Get final statistics
             stats = self.db.get_database_stats()
-            logger.info("Data ingestion completed successfully")
+            logger.info(f"Data ingestion completed successfully for season {season}")
 
             return stats
 

@@ -63,13 +63,17 @@ def demo_data_ingestion(db: FantasyDatabase) -> Dict[str, int]:
     start_time = time.time()
 
     try:
+        stats = dict()
         # Run full ingestion
-        stats = ingestion.run_full_ingestion(
-            teams_file=config.TEAMS_FILE,
-            draft_file=config.DRAFT_HISTORY_FILE,
-            force_player_refresh=False,  # Don't refresh players if they exist
-            # force_player_refresh=True,  # Don't refresh players if they exist
-        )
+        for season in config.SUPPORTED_SEASONS:
+            new_stats = ingestion.run_full_ingestion(
+                teams_file=config.TEAMS_FILE,
+                draft_file=config.DRAFT_HISTORY_FILE,
+                force_player_refresh=False,  # Don't refresh players if they exist
+                # force_player_refresh=True,  # Don't refresh players if they exist
+                season=season,
+            )
+            stats.update(new_stats)
 
         ingestion_time = time.time() - start_time
 

@@ -135,9 +135,12 @@ class ESPNClient:
         # All retries exhausted
         raise RequestException(f"Request failed after {max_retries + 1} attempts: {last_exception}")
     
-    def get_draft_history(self) -> Dict[str, Any]:
+    def get_draft_history(self, season: Optional[int] = None) -> Dict[str, Any]:
         """
         Fetch draft history data from ESPN API.
+        
+        Args:
+            season: Season year to fetch (None for default)
         
         Returns:
             Draft history data as a dictionary
@@ -147,8 +150,8 @@ class ESPNClient:
             ValueError: If response is invalid
         """
         try:
-            url = self.config.get_draft_history_url()
-            self.logger.info(f"Fetching draft history from {url}")
+            url = self.config.get_draft_history_url(season)
+            self.logger.info(f"Fetching draft history from {url} for season {season or 'default'}")
             
             # Update headers for draft history request
             headers = self.config.get_espn_headers()
@@ -160,9 +163,12 @@ class ESPNClient:
             self.logger.error(f"Failed to fetch draft history: {e}")
             raise
     
-    def get_players(self) -> Dict[str, Any]:
+    def get_players(self, season: Optional[int] = None) -> Dict[str, Any]:
         """
         Fetch player data from ESPN API.
+        
+        Args:
+            season: Season year to fetch (None for default)
         
         Returns:
             Player data as a dictionary
@@ -172,8 +178,8 @@ class ESPNClient:
             ValueError: If response is invalid
         """
         try:
-            url = self.config.get_players_url()
-            self.logger.info(f"Fetching players data from {url}")
+            url = self.config.get_players_url(season)
+            self.logger.info(f"Fetching players data from {url} for season {season or 'default'}")
             
             # Update headers for players request
             headers = self.config.get_espn_headers()
@@ -185,9 +191,12 @@ class ESPNClient:
             self.logger.error(f"Failed to fetch players data: {e}")
             raise
 
-    def get_rosters(self) -> Dict[str, Any]:
+    def get_rosters(self, season: Optional[int] = None) -> Dict[str, Any]:
         """
         Fetch roster data from ESPN API.
+        
+        Args:
+            season: Season year to fetch (None for default)
         
         Returns:
             Roster data as a dictionary
@@ -197,8 +206,8 @@ class ESPNClient:
             ValueError: If response is invalid
         """
         try:
-            url = self.config.get_roster_url()
-            self.logger.info(f"Fetching roster data from {url}")
+            url = self.config.get_roster_url(season)
+            self.logger.info(f"Fetching roster data from {url} for season {season or 'default'}")
             
             # Update headers for roster request
             headers = self.config.get_espn_headers()
@@ -216,37 +225,46 @@ _default_client = ESPNClient()
 
 
 # Backward compatibility functions
-def get_draft_history() -> Dict[str, Any]:
+def get_draft_history(season: Optional[int] = None) -> Dict[str, Any]:
     """
     Fetch draft history data from ESPN API.
     
     This function maintains backward compatibility with the original API.
     
+    Args:
+        season: Season year to fetch (None for default)
+    
     Returns:
         Draft history data as a dictionary
     """
-    return _default_client.get_draft_history()
+    return _default_client.get_draft_history(season)
 
 
-def get_players() -> Dict[str, Any]:
+def get_players(season: Optional[int] = None) -> Dict[str, Any]:
     """
     Fetch player data from ESPN API.
     
     This function maintains backward compatibility with the original API.
     
+    Args:
+        season: Season year to fetch (None for default)
+    
     Returns:
         Player data as a dictionary
     """
-    return _default_client.get_players()
+    return _default_client.get_players(season)
 
 
-def get_rosters() -> Dict[str, Any]:
+def get_rosters(season: Optional[int] = None) -> Dict[str, Any]:
     """
     Fetch roster data from ESPN API.
     
     This function maintains backward compatibility with the original API.
     
+    Args:
+        season: Season year to fetch (None for default)
+    
     Returns:
         Roster data as a dictionary
     """
-    return _default_client.get_rosters()
+    return _default_client.get_rosters(season)
