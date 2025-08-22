@@ -219,8 +219,12 @@ class DataIngestion:
             if not stats or len(stats) == 0:
                 return
 
+            fantasy_score = 0.0
+
             # Get the applied total from the first stats entry
-            fantasy_score = stats[0].get("appliedTotal", 0.0)
+            for stat in stats:
+                if stat.get("id") == "00" + str(season):
+                    fantasy_score = stat.get("appliedTotal", 0.0)
 
             # Update the player's fantasy score in the database
             query = """

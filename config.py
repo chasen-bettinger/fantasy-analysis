@@ -77,6 +77,13 @@ class Config:
         os.getenv("FORCE_PLAYER_REFRESH", "false").lower() == "true"
     )
     ANALYSIS_CACHE_TTL: int = int(os.getenv("ANALYSIS_CACHE_TTL", "3600"))  # 1 hour
+    
+    # ESPN API Cache Configuration
+    ENABLE_ESPN_CACHE: bool = (
+        os.getenv("ENABLE_ESPN_CACHE", "true").lower() == "true"
+    )
+    ESPN_CACHE_DIR: str = os.getenv("ESPN_CACHE_DIR", ".cache/espn")
+    ESPN_CACHE_FORMAT: str = os.getenv("ESPN_CACHE_FORMAT", "json")  # json or pickle
 
     @classmethod
     def get_espn_headers(cls) -> Dict[str, str]:
@@ -176,6 +183,11 @@ class Config:
         # Ensure parent directory of database exists
         db_path = Path(cls.DATABASE_PATH)
         db_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Ensure ESPN cache directory exists
+        if cls.ENABLE_ESPN_CACHE:
+            cache_path = Path(cls.ESPN_CACHE_DIR)
+            cache_path.mkdir(parents=True, exist_ok=True)
 
     @classmethod
     def get_summary(cls) -> Dict[str, Any]:
