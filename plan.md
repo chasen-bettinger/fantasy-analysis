@@ -1,3 +1,8 @@
+08/22/25
+
+
+====
+
 I'm building a research analysis tool for Fantasy Football.
 
 I'm ingesting data from espn apis, storing that data in a sqlite database, and then building data visualizations and analysis from that data.

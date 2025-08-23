@@ -200,6 +200,8 @@ class DataIngestion:
                 for roster_entry in roster_entries:
                     self._load_player_stats(roster_entry, season)
                     self._load_roster_entry(roster_entry, espn_team_id, season)
+
+            self._reconcile_player_ranks(season)
             logger.info(f"Loaded player stats for season {season}")
         except Exception as e:
             logger.error(f"Error in load_rosters: {e}")
@@ -221,7 +223,6 @@ class DataIngestion:
 
             fantasy_score = 0.0
 
-            # Get the applied total from the first stats entry
             for stat in stats:
                 if stat.get("id") == "00" + str(season):
                     fantasy_score = stat.get("appliedTotal", 0.0)
@@ -296,6 +297,106 @@ class DataIngestion:
 
         except Exception as e:
             logger.warning(f"Error loading roster entry: {e}")
+
+    def _reconcile_player_ranks(self, season: int) -> None:
+        """
+        Calculate and update player rankings based on fantasy scores.
+        
+        Updates position_rank and overall_rank for all players in the specified season:
+        - position_rank: Rank within each position (QB1, QB2, RB1, RB2, etc.)
+        - overall_rank: Rank across all positions (1 = best overall player)
+        
+        Args:
+            season: Season year to update rankings for
+        """
+        try:
+            logger.info(f"Calculating player rankings for season {season}")
+            
+            # Update position ranks using SQL window function
+            position_rank_query = """
+            UPDATE players 
+            SET position_rank = (
+                SELECT rank_within_position
+                FROM (
+                    SELECT 
+                        id,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY position 
+                            ORDER BY fantasy_score DESC, name ASC
+                        ) as rank_within_position
+                    FROM players 
+                    WHERE season = ? 
+                      AND fantasy_score IS NOT NULL 
+                      AND fantasy_score > 0
+                ) ranked_players
+                WHERE players.id = ranked_players.id
+            )
+            WHERE season = ? 
+              AND fantasy_score IS NOT NULL 
+              AND fantasy_score > 0
+            """
+            
+            # Update overall ranks using SQL window function
+            overall_rank_query = """
+            UPDATE players 
+            SET overall_rank = (
+                SELECT rank_overall
+                FROM (
+                    SELECT 
+                        id,
+                        ROW_NUMBER() OVER (
+                            ORDER BY fantasy_score DESC, name ASC
+                        ) as rank_overall
+                    FROM players 
+                    WHERE season = ? 
+                      AND fantasy_score IS NOT NULL 
+                      AND fantasy_score > 0
+                ) ranked_players
+                WHERE players.id = ranked_players.id
+            )
+            WHERE season = ? 
+              AND fantasy_score IS NOT NULL 
+              AND fantasy_score > 0
+            """
+            
+            with self.db.get_connection() as conn:
+                # Update position ranks
+                cursor = conn.execute(position_rank_query, (season, season))
+                position_updates = cursor.rowcount
+                
+                # Update overall ranks
+                cursor = conn.execute(overall_rank_query, (season, season))
+                overall_updates = cursor.rowcount
+                
+                conn.commit()
+                
+                logger.info(
+                    f"Updated rankings for season {season}: "
+                    f"{position_updates} position ranks, {overall_updates} overall ranks"
+                )
+                
+                # Log some sample rankings for verification
+                sample_query = """
+                SELECT name, position, fantasy_score, position_rank, overall_rank
+                FROM players 
+                WHERE season = ? 
+                  AND position_rank IS NOT NULL 
+                  AND overall_rank IS NOT NULL
+                ORDER BY overall_rank ASC 
+                LIMIT 5
+                """
+                
+                sample_results = self.db.execute_query(sample_query, (season,))
+                if sample_results:
+                    logger.debug(f"Top 5 ranked players for season {season}:")
+                    for player in sample_results:
+                        logger.debug(
+                            f"  {player['overall_rank']}. {player['name']} ({player['position']}#{player['position_rank']}) - {player['fantasy_score']:.1f} pts"
+                        )
+                
+        except Exception as e:
+            logger.error(f"Error calculating player rankings for season {season}: {e}")
+            raise IngestionError(f"Failed to reconcile player ranks: {e}")
 
     def _load_fantasy_teams(self, teams: List[Dict[str, Any]], season: int) -> int:
         """Extract and load fantasy teams from draft teams."""

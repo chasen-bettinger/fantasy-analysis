@@ -84,9 +84,11 @@ CREATE TABLE IF NOT EXISTS players (
     eligibility_status TEXT,
     is_active BOOLEAN DEFAULT TRUE,
     fantasy_score REAL DEFAULT 0.0,
-    season INTEGER
+    position_rank INTEGER,
+    overall_rank INTEGER,
+    season INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (nfl_team_id) REFERENCES nfl_teams (id)
+    FOREIGN KEY (nfl_team_id) REFERENCES nfl_teams (id),
     UNIQUE(season, espn_player_id)
 );
 
