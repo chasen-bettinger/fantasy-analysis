@@ -1,0 +1,11 @@
+{
+  "team": "Denver Broncos",
+  "season": 2021,
+  "coaching_staff": {
+    "head_coach": "Vic Fangio",
+    "offensive_coordinator": "Pat Shurmur",
+    "defensive_coordinator": "Ed Donatell"
+  },
+  "source": "Wikipedia - 2021 Denver Broncos season",
+  "extracted_at": "2025-08-24T13:50:53.746809"
+}

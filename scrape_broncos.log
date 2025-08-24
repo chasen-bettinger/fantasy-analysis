@@ -1,0 +1,155 @@
+2025-08-24 12:46:36,431 - __main__ - INFO - Initialized BroncosWikiScraper
+2025-08-24 12:46:36,431 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 12:46:36,431 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2024_Denver_Broncos_season
+2025-08-24 12:46:36,431 - __main__ - INFO - Starting Denver Broncos Wikipedia scraping
+2025-08-24 12:46:36,431 - __main__ - INFO - Fetching page: https://en.wikipedia.org/wiki/2024_Denver_Broncos_season
+2025-08-24 12:46:37,697 - __main__ - INFO - Successfully fetched page
+2025-08-24 12:46:37,698 - __main__ - INFO - Response status: 200
+2025-08-24 12:46:37,698 - __main__ - INFO - Content-Type: text/html; charset=UTF-8
+2025-08-24 12:46:37,698 - __main__ - INFO - Content-Length: 702,928 bytes
+2025-08-24 12:46:37,726 - __main__ - INFO - Decoded content length: 701,156 characters
+2025-08-24 12:46:37,727 - __main__ - INFO - Saving HTML content to: /Users/chasen/alright/fantasy-analysis/data_source/2024_denver_broncos_wikipedia.html
+2025-08-24 12:46:37,729 - __main__ - INFO - Successfully saved 702,928 bytes to 2024_denver_broncos_wikipedia.html
+2025-08-24 12:46:37,729 - __main__ - INFO - Metadata saved to: 2024_denver_broncos_wikipedia.metadata.json
+2025-08-24 12:46:37,729 - __main__ - INFO - Scraping completed successfully!
+2025-08-24 12:46:37,729 - __main__ - INFO - File saved at: /Users/chasen/alright/fantasy-analysis/data_source/2024_denver_broncos_wikipedia.html
+2025-08-24 13:25:56,674 - __main__ - INFO - Initialized BroncosWikiScraper for 2024 season
+2025-08-24 13:25:56,675 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:25:56,675 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2024_Denver_Broncos_season
+2025-08-24 13:25:56,675 - __main__ - INFO - Output filename: 2024_denver_broncos_wikipedia.html
+2025-08-24 13:25:56,675 - __main__ - INFO - Starting Denver Broncos 2024 season Wikipedia scraping
+2025-08-24 13:25:56,675 - __main__ - INFO - File already exists: 2024_denver_broncos_wikipedia.html
+2025-08-24 13:25:56,675 - __main__ - INFO - File size: 702,928 bytes
+2025-08-24 13:25:56,675 - __main__ - INFO - Last modified: 2025-08-24 12:46:37
+2025-08-24 13:25:56,675 - __main__ - INFO - File already exists and force_overwrite is False. Skipping download.
+2025-08-24 13:25:56,675 - __main__ - INFO - Use force_overwrite=True or --force flag to re-download.
+2025-08-24 13:26:03,432 - __main__ - INFO - Initialized BroncosWikiScraper for 2024 season
+2025-08-24 13:26:03,432 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:26:03,432 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2024_Denver_Broncos_season
+2025-08-24 13:26:03,432 - __main__ - INFO - Output filename: 2024_denver_broncos_wikipedia.html
+2025-08-24 13:26:03,433 - __main__ - INFO - Starting Denver Broncos 2024 season Wikipedia scraping
+2025-08-24 13:26:03,433 - __main__ - INFO - File already exists: 2024_denver_broncos_wikipedia.html
+2025-08-24 13:26:03,433 - __main__ - INFO - File size: 702,928 bytes
+2025-08-24 13:26:03,433 - __main__ - INFO - Last modified: 2025-08-24 12:46:37
+2025-08-24 13:26:03,433 - __main__ - INFO - File exists but force_overwrite is True. Re-downloading...
+2025-08-24 13:26:03,433 - __main__ - INFO - Fetching page: https://en.wikipedia.org/wiki/2024_Denver_Broncos_season
+2025-08-24 13:26:04,682 - __main__ - INFO - Successfully fetched page
+2025-08-24 13:26:04,683 - __main__ - INFO - Response status: 200
+2025-08-24 13:26:04,683 - __main__ - INFO - Content-Type: text/html; charset=UTF-8
+2025-08-24 13:26:04,683 - __main__ - INFO - Content-Length: 702,928 bytes
+2025-08-24 13:26:04,704 - __main__ - INFO - Decoded content length: 701,156 characters
+2025-08-24 13:26:04,705 - __main__ - INFO - Saving HTML content to: /Users/chasen/alright/fantasy-analysis/data_source/2024_denver_broncos_wikipedia.html
+2025-08-24 13:26:04,706 - __main__ - INFO - Successfully saved 702,928 bytes to 2024_denver_broncos_wikipedia.html
+2025-08-24 13:26:04,706 - __main__ - INFO - Metadata saved to: 2024_denver_broncos_wikipedia.metadata.json
+2025-08-24 13:26:04,706 - __main__ - INFO - Scraping completed successfully!
+2025-08-24 13:26:04,706 - __main__ - INFO - File saved at: /Users/chasen/alright/fantasy-analysis/data_source/2024_denver_broncos_wikipedia.html
+2025-08-24 13:26:11,576 - __main__ - INFO - Initialized BroncosWikiScraper for 2023 season
+2025-08-24 13:26:11,576 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:26:11,576 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2023_Denver_Broncos_season
+2025-08-24 13:26:11,576 - __main__ - INFO - Output filename: 2023_denver_broncos_wikipedia.html
+2025-08-24 13:26:11,576 - __main__ - INFO - Starting Denver Broncos 2023 season Wikipedia scraping
+2025-08-24 13:26:11,576 - __main__ - INFO - Fetching page: https://en.wikipedia.org/wiki/2023_Denver_Broncos_season
+2025-08-24 13:26:12,815 - __main__ - INFO - Successfully fetched page
+2025-08-24 13:26:12,815 - __main__ - INFO - Response status: 200
+2025-08-24 13:26:12,816 - __main__ - INFO - Content-Type: text/html; charset=UTF-8
+2025-08-24 13:26:12,816 - __main__ - INFO - Content-Length: 675,649 bytes
+2025-08-24 13:26:12,835 - __main__ - INFO - Decoded content length: 673,987 characters
+2025-08-24 13:26:12,836 - __main__ - INFO - Saving HTML content to: /Users/chasen/alright/fantasy-analysis/data_source/2023_denver_broncos_wikipedia.html
+2025-08-24 13:26:12,837 - __main__ - INFO - Successfully saved 675,649 bytes to 2023_denver_broncos_wikipedia.html
+2025-08-24 13:26:12,838 - __main__ - INFO - Metadata saved to: 2023_denver_broncos_wikipedia.metadata.json
+2025-08-24 13:26:12,838 - __main__ - INFO - Scraping completed successfully!
+2025-08-24 13:26:12,838 - __main__ - INFO - File saved at: /Users/chasen/alright/fantasy-analysis/data_source/2023_denver_broncos_wikipedia.html
+2025-08-24 13:26:38,368 - __main__ - INFO - Initialized BroncosWikiScraper for 2022 season
+2025-08-24 13:26:38,369 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:26:38,369 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2022_Denver_Broncos_season
+2025-08-24 13:26:38,369 - __main__ - INFO - Output filename: 2022_denver_broncos_wikipedia.html
+2025-08-24 13:26:38,369 - __main__ - INFO - Starting Denver Broncos 2022 season Wikipedia scraping
+2025-08-24 13:26:38,369 - __main__ - INFO - Fetching page: https://en.wikipedia.org/wiki/2022_Denver_Broncos_season
+2025-08-24 13:26:39,620 - __main__ - INFO - Successfully fetched page
+2025-08-24 13:26:39,621 - __main__ - INFO - Response status: 200
+2025-08-24 13:26:39,621 - __main__ - INFO - Content-Type: text/html; charset=UTF-8
+2025-08-24 13:26:39,621 - __main__ - INFO - Content-Length: 687,687 bytes
+2025-08-24 13:26:39,642 - __main__ - INFO - Decoded content length: 685,991 characters
+2025-08-24 13:26:39,642 - __main__ - INFO - Saving HTML content to: /Users/chasen/alright/fantasy-analysis/data_source/2022_denver_broncos_wikipedia.html
+2025-08-24 13:26:39,643 - __main__ - INFO - Successfully saved 687,687 bytes to 2022_denver_broncos_wikipedia.html
+2025-08-24 13:26:39,644 - __main__ - INFO - Metadata saved to: 2022_denver_broncos_wikipedia.metadata.json
+2025-08-24 13:26:39,644 - __main__ - INFO - Scraping completed successfully!
+2025-08-24 13:26:39,644 - __main__ - INFO - File saved at: /Users/chasen/alright/fantasy-analysis/data_source/2022_denver_broncos_wikipedia.html
+2025-08-24 13:26:39,644 - __main__ - INFO - Initialized BroncosWikiScraper for 2023 season
+2025-08-24 13:26:39,644 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:26:39,644 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2023_Denver_Broncos_season
+2025-08-24 13:26:39,645 - __main__ - INFO - Output filename: 2023_denver_broncos_wikipedia.html
+2025-08-24 13:26:39,645 - __main__ - INFO - Starting Denver Broncos 2023 season Wikipedia scraping
+2025-08-24 13:26:39,645 - __main__ - INFO - File already exists: 2023_denver_broncos_wikipedia.html
+2025-08-24 13:26:39,645 - __main__ - INFO - File size: 675,649 bytes
+2025-08-24 13:26:39,645 - __main__ - INFO - Last modified: 2025-08-24 13:26:12
+2025-08-24 13:26:39,645 - __main__ - INFO - File already exists and force_overwrite is False. Skipping download.
+2025-08-24 13:26:39,645 - __main__ - INFO - Use force_overwrite=True or --force flag to re-download.
+2025-08-24 13:28:10,786 - __main__ - INFO - Initialized BroncosWikiScraper for 2021 season
+2025-08-24 13:28:10,787 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:28:10,787 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2021_Denver_Broncos_season
+2025-08-24 13:28:10,787 - __main__ - INFO - Output filename: 2021_denver_broncos_wikipedia.html
+2025-08-24 13:28:10,787 - __main__ - INFO - Starting Denver Broncos 2021 season Wikipedia scraping
+2025-08-24 13:28:10,787 - __main__ - INFO - Fetching page: https://en.wikipedia.org/wiki/2021_Denver_Broncos_season
+2025-08-24 13:28:12,194 - __main__ - INFO - Successfully fetched page
+2025-08-24 13:28:12,195 - __main__ - INFO - Response status: 200
+2025-08-24 13:28:12,195 - __main__ - INFO - Content-Type: text/html; charset=UTF-8
+2025-08-24 13:28:12,195 - __main__ - INFO - Content-Length: 702,708 bytes
+2025-08-24 13:28:12,218 - __main__ - INFO - Decoded content length: 701,094 characters
+2025-08-24 13:28:12,219 - __main__ - INFO - Saving HTML content to: /Users/chasen/alright/fantasy-analysis/data_source/2021_denver_broncos_wikipedia.html
+2025-08-24 13:28:12,220 - __main__ - INFO - Successfully saved 702,708 bytes to 2021_denver_broncos_wikipedia.html
+2025-08-24 13:28:12,221 - __main__ - INFO - Metadata saved to: 2021_denver_broncos_wikipedia.metadata.json
+2025-08-24 13:28:12,221 - __main__ - INFO - Scraping completed successfully!
+2025-08-24 13:28:12,221 - __main__ - INFO - File saved at: /Users/chasen/alright/fantasy-analysis/data_source/2021_denver_broncos_wikipedia.html
+2025-08-24 13:28:12,221 - __main__ - INFO - Initialized BroncosWikiScraper for 2022 season
+2025-08-24 13:28:12,221 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:28:12,221 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2022_Denver_Broncos_season
+2025-08-24 13:28:12,222 - __main__ - INFO - Output filename: 2022_denver_broncos_wikipedia.html
+2025-08-24 13:28:12,222 - __main__ - INFO - File already exists: 2022_denver_broncos_wikipedia.html
+2025-08-24 13:28:12,222 - __main__ - INFO - File size: 687,687 bytes
+2025-08-24 13:28:12,222 - __main__ - INFO - Last modified: 2025-08-24 13:26:39
+2025-08-24 13:28:12,222 - __main__ - INFO - Starting Denver Broncos 2022 season Wikipedia scraping
+2025-08-24 13:28:12,222 - __main__ - INFO - File already exists: 2022_denver_broncos_wikipedia.html
+2025-08-24 13:28:12,222 - __main__ - INFO - File size: 687,687 bytes
+2025-08-24 13:28:12,222 - __main__ - INFO - Last modified: 2025-08-24 13:26:39
+2025-08-24 13:28:12,222 - __main__ - INFO - File already exists and force_overwrite is False. Skipping download.
+2025-08-24 13:28:12,222 - __main__ - INFO - Use force_overwrite=True or --force flag to re-download.
+2025-08-24 13:28:31,172 - __main__ - INFO - Initialized BroncosWikiScraper for 2030 season
+2025-08-24 13:28:31,172 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:28:31,172 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2030_Denver_Broncos_season
+2025-08-24 13:28:31,172 - __main__ - INFO - Output filename: 2030_denver_broncos_wikipedia.html
+2025-08-24 13:28:31,172 - __main__ - INFO - Starting Denver Broncos 2030 season Wikipedia scraping
+2025-08-24 13:28:31,172 - __main__ - INFO - Fetching page: https://en.wikipedia.org/wiki/2030_Denver_Broncos_season
+2025-08-24 13:28:32,614 - __main__ - ERROR - Request failed: 404 Client Error: Not Found for url: https://en.wikipedia.org/wiki/2030_Denver_Broncos_season
+2025-08-24 13:28:32,614 - __main__ - ERROR - Response status: 404
+2025-08-24 13:28:32,614 - __main__ - ERROR - Response headers: {'date': 'Sun, 24 Aug 2025 17:28:32 GMT', 'server': 'mw-web.eqiad.main-5d46b6655c-f7l52', 'x-content-type-options': 'nosniff', 'content-language': 'en', 'accept-ch': '', 'content-type': 'text/html; charset=UTF-8', 'content-encoding': 'gzip', 'age': '0', 'vary': 'Accept-Encoding,X-Subdomain,Cookie,Authorization', 'x-cache': 'cp1102 miss, cp1102 miss', 'x-cache-status': 'miss', 'server-timing': 'cache;desc="miss", host;desc="cp1102"', 'strict-transport-security': 'max-age=106384710; includeSubDomains; preload', 'report-to': '{ "group": "wm_nel", "max_age": 604800, "endpoints": [{ "url": "https://intake-logging.wikimedia.org/v1/events?stream=w3c.reportingapi.network_error&schema_uri=/w3c/reportingapi/network_error/1.0.0" }] }', 'nel': '{ "report_to": "wm_nel", "max_age": 604800, "failure_fraction": 0.05, "success_fraction": 0.0}', 'set-cookie': 'WMF-Last-Access=24-Aug-2025;Path=/;HttpOnly;secure;Expires=Thu, 25 Sep 2025 12:00:00 GMT, WMF-Last-Access-Global=24-Aug-2025;Path=/;Domain=.wikipedia.org;HttpOnly;secure;Expires=Thu, 25 Sep 2025 12:00:00 GMT, GeoIP=US:FL:Saint_Augustine:30.01:-81.41:v4; Path=/; secure; Domain=.wikipedia.org, NetworkProbeLimit=0.001;Path=/;Secure;SameSite=None;Max-Age=3600, WMF-Uniq=l_oz8c862ir9GwRbSsINIQJZAAAAAFvddDGnvaXgdquMFPxBAVw2c5V2ubWGnedK;Domain=.wikipedia.org;Path=/;HttpOnly;secure;SameSite=None;Expires=Mon, 24 Aug 2026 00:00:00 GMT', 'x-client-ip': '2600:1700:60f2:5810:70be:1a0e:9783:3a66', 'cache-control': 'private, s-maxage=0, max-age=0, must-revalidate, no-transform', 'transfer-encoding': 'chunked', 'x-analytics': ''}
+2025-08-24 13:28:32,614 - __main__ - ERROR - Scraping failed: 404 Client Error: Not Found for url: https://en.wikipedia.org/wiki/2030_Denver_Broncos_season
+2025-08-24 13:28:52,120 - __main__ - INFO - Initialized BroncosWikiScraper for 2024 season
+2025-08-24 13:28:52,120 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:28:52,120 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2024_Denver_Broncos_season
+2025-08-24 13:28:52,120 - __main__ - INFO - Output filename: 2024_denver_broncos_wikipedia.html
+2025-08-24 13:28:52,120 - __main__ - INFO - File already exists: 2024_denver_broncos_wikipedia.html
+2025-08-24 13:28:52,120 - __main__ - INFO - File size: 702,928 bytes
+2025-08-24 13:28:52,121 - __main__ - INFO - Last modified: 2025-08-24 13:26:04
+2025-08-24 13:28:52,121 - __main__ - INFO - Starting Denver Broncos 2024 season Wikipedia scraping
+2025-08-24 13:28:52,121 - __main__ - INFO - File already exists: 2024_denver_broncos_wikipedia.html
+2025-08-24 13:28:52,121 - __main__ - INFO - File size: 702,928 bytes
+2025-08-24 13:28:52,121 - __main__ - INFO - Last modified: 2025-08-24 13:26:04
+2025-08-24 13:28:52,121 - __main__ - INFO - File already exists and force_overwrite is False. Skipping download.
+2025-08-24 13:28:52,121 - __main__ - INFO - Use force_overwrite=True or --force flag to re-download.
+2025-08-24 13:33:25,797 - __main__ - INFO - Initialized BroncosWikiScraper for 2025 season
+2025-08-24 13:33:25,797 - __main__ - INFO - Output directory: /Users/chasen/alright/fantasy-analysis/data_source
+2025-08-24 13:33:25,797 - __main__ - INFO - Target URL: https://en.wikipedia.org/wiki/2025_Denver_Broncos_season
+2025-08-24 13:33:25,797 - __main__ - INFO - Output filename: 2025_denver_broncos_wikipedia.html
+2025-08-24 13:33:25,797 - __main__ - INFO - Starting Denver Broncos 2025 season Wikipedia scraping
+2025-08-24 13:33:25,797 - __main__ - INFO - Fetching page: https://en.wikipedia.org/wiki/2025_Denver_Broncos_season
+2025-08-24 13:33:27,153 - __main__ - INFO - Successfully fetched page
+2025-08-24 13:33:27,153 - __main__ - INFO - Response status: 200
+2025-08-24 13:33:27,153 - __main__ - INFO - Content-Type: text/html; charset=UTF-8
+2025-08-24 13:33:27,154 - __main__ - INFO - Content-Length: 344,214 bytes
+2025-08-24 13:33:27,176 - __main__ - INFO - Decoded content length: 343,926 characters
+2025-08-24 13:33:27,176 - __main__ - INFO - Saving HTML content to: /Users/chasen/alright/fantasy-analysis/data_source/2025_denver_broncos_wikipedia.html
+2025-08-24 13:33:27,177 - __main__ - INFO - Successfully saved 344,214 bytes to 2025_denver_broncos_wikipedia.html
+2025-08-24 13:33:27,177 - __main__ - INFO - Metadata saved to: 2025_denver_broncos_wikipedia.metadata.json
+2025-08-24 13:33:27,177 - __main__ - INFO - Scraping completed successfully!
+2025-08-24 13:33:27,177 - __main__ - INFO - File saved at: /Users/chasen/alright/fantasy-analysis/data_source/2025_denver_broncos_wikipedia.html

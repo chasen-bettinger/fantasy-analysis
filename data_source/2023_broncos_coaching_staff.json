@@ -1,0 +1,11 @@
+{
+  "team": "Denver Broncos",
+  "season": 2023,
+  "coaching_staff": {
+    "head_coach": "Sean Payton",
+    "offensive_coordinator": "Joe Lombardi",
+    "defensive_coordinator": "Vance Joseph"
+  },
+  "source": "Wikipedia - 2023 Denver Broncos season",
+  "extracted_at": "2025-08-24T13:50:54.182273"
+}
