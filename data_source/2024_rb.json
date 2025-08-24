@@ -1,0 +1,630 @@
+{
+  "season": 2024,
+  "position": "RB",
+  "rankings": [
+    {
+      "rb_rank": 1,
+      "overall_rank": 1,
+      "name": "Christian McCaffrey",
+      "team": "SF",
+      "bye_week": 9,
+      "status": "O",
+      "ranking_1": 1,
+      "ranking_2": 1,
+      "average_rank": 1.0
+    },
+    {
+      "rb_rank": 2,
+      "overall_rank": 6,
+      "name": "Breece Hall",
+      "team": "NYJ",
+      "bye_week": 12,
+      "ranking_1": 3,
+      "ranking_2": 2,
+      "average_rank": 2.3
+    },
+    {
+      "rb_rank": 3,
+      "overall_rank": 5,
+      "name": "Bijan Robinson",
+      "team": "ATL",
+      "bye_week": 12,
+      "ranking_1": 2,
+      "ranking_2": 3,
+      "average_rank": 2.7
+    },
+    {
+      "rb_rank": 4,
+      "overall_rank": 10,
+      "name": "Saquon Barkley",
+      "team": "PHI",
+      "bye_week": 5,
+      "ranking_1": 6,
+      "ranking_2": 4,
+      "average_rank": 4.7
+    },
+    {
+      "rb_rank": 5,
+      "overall_rank": 11,
+      "name": "Jonathan Taylor",
+      "team": "IND",
+      "bye_week": 14,
+      "ranking_1": 5,
+      "ranking_2": 5,
+      "average_rank": 5.0
+    },
+    {
+      "rb_rank": 6,
+      "overall_rank": 12,
+      "name": "Jahmyr Gibbs",
+      "team": "DET",
+      "bye_week": 5,
+      "ranking_1": 4,
+      "ranking_2": 6,
+      "average_rank": 6.0
+    },
+    {
+      "rb_rank": 7,
+      "overall_rank": 16,
+      "name": "Travis Etienne Jr.",
+      "team": "JAC",
+      "bye_week": 12,
+      "ranking_1": 7,
+      "ranking_2": 7,
+      "average_rank": 8.3
+    },
+    {
+      "rb_rank": 8,
+      "overall_rank": 17,
+      "name": "Kyren Williams",
+      "team": "LAR",
+      "bye_week": 6,
+      "ranking_1": 8,
+      "ranking_2": 10,
+      "average_rank": 8.3
+    },
+    {
+      "rb_rank": 9,
+      "overall_rank": 18,
+      "name": "Derrick Henry",
+      "team": "BAL",
+      "bye_week": 14,
+      "ranking_1": 9,
+      "ranking_2": 11,
+      "average_rank": 8.7
+    },
+    {
+      "rb_rank": 10,
+      "overall_rank": 19,
+      "name": "Josh Jacobs",
+      "team": "GB",
+      "bye_week": 10,
+      "ranking_1": 11,
+      "ranking_2": 8,
+      "average_rank": 10.3
+    },
+    {
+      "rb_rank": 11,
+      "overall_rank": 20,
+      "name": "De'Von Achane",
+      "team": "MIA",
+      "bye_week": 6,
+      "ranking_1": 10,
+      "ranking_2": 9,
+      "average_rank": 11.0
+    },
+    {
+      "rb_rank": 12,
+      "overall_rank": 24,
+      "name": "Isiah Pacheco",
+      "team": "KC",
+      "bye_week": 6,
+      "ranking_1": 12,
+      "ranking_2": 12,
+      "average_rank": 11.3
+    },
+    {
+      "rb_rank": 13,
+      "overall_rank": 32,
+      "name": "James Cook",
+      "team": "BUF",
+      "bye_week": 12,
+      "ranking_1": 14,
+      "ranking_2": 13,
+      "average_rank": 12.0
+    },
+    {
+      "rb_rank": 14,
+      "overall_rank": 33,
+      "name": "Rachaad White",
+      "team": "TB",
+      "bye_week": 11,
+      "ranking_1": 13,
+      "ranking_2": 14,
+      "average_rank": 14.3
+    },
+    {
+      "rb_rank": 15,
+      "overall_rank": 44,
+      "name": "Joe Mixon",
+      "team": "HOU",
+      "bye_week": 14,
+      "ranking_1": 15,
+      "ranking_2": 17,
+      "average_rank": 15.0
+    },
+    {
+      "rb_rank": 16,
+      "overall_rank": 43,
+      "name": "Kenneth Walker III",
+      "team": "SEA",
+      "bye_week": 10,
+      "ranking_1": 16,
+      "ranking_2": 15,
+      "average_rank": 15.3
+    },
+    {
+      "rb_rank": 17,
+      "overall_rank": 45,
+      "name": "Alvin Kamara",
+      "team": "NO",
+      "bye_week": 12,
+      "ranking_1": 17,
+      "ranking_2": 16,
+      "average_rank": 17.3
+    },
+    {
+      "rb_rank": 18,
+      "overall_rank": 56,
+      "name": "James Conner",
+      "team": "ARI",
+      "bye_week": 11,
+      "ranking_1": 19,
+      "ranking_2": 21,
+      "average_rank": 19.0
+    },
+    {
+      "rb_rank": 19,
+      "overall_rank": 53,
+      "name": "Aaron Jones Sr.",
+      "team": "MIN",
+      "bye_week": 6,
+      "ranking_1": 18,
+      "ranking_2": 20,
+      "average_rank": 20.7
+    },
+    {
+      "rb_rank": 20,
+      "overall_rank": 55,
+      "name": "D'Andre Swift",
+      "team": "CHI",
+      "bye_week": 7,
+      "ranking_1": 21,
+      "ranking_2": 18,
+      "average_rank": 20.7
+    },
+    {
+      "rb_rank": 21,
+      "overall_rank": 65,
+      "name": "David Montgomery",
+      "team": "DET",
+      "bye_week": 5,
+      "ranking_1": 20,
+      "ranking_2": 25,
+      "average_rank": 21.0
+    },
+    {
+      "rb_rank": 22,
+      "overall_rank": 68,
+      "name": "Zamir White",
+      "team": "LV",
+      "bye_week": 10,
+      "status": "O",
+      "ranking_1": 24,
+      "ranking_2": 22,
+      "average_rank": 22.0
+    },
+    {
+      "rb_rank": 23,
+      "overall_rank": 58,
+      "name": "Rhamondre Stevenson",
+      "team": "NE",
+      "bye_week": 14,
+      "ranking_1": 22,
+      "ranking_2": 19,
+      "average_rank": 22.7
+    },
+    {
+      "rb_rank": 24,
+      "overall_rank": 69,
+      "name": "Najee Harris",
+      "team": "LAC",
+      "bye_week": 5,
+      "ranking_1": 23,
+      "ranking_2": 24,
+      "average_rank": 23.0
+    },
+    {
+      "rb_rank": 25,
+      "overall_rank": 76,
+      "name": "Raheem Mostert",
+      "team": "LV",
+      "bye_week": 10,
+      "ranking_1": 25,
+      "ranking_2": 27,
+      "average_rank": 24.3
+    },
+    {
+      "rb_rank": 26,
+      "overall_rank": 79,
+      "name": "Tony Pollard",
+      "team": "TEN",
+      "bye_week": 5,
+      "ranking_1": 26,
+      "ranking_2": 28,
+      "average_rank": 26.7
+    },
+    {
+      "rb_rank": 27,
+      "overall_rank": 77,
+      "name": "Javonte Williams",
+      "team": "DAL",
+      "bye_week": 7,
+      "ranking_1": 30,
+      "ranking_2": 23,
+      "average_rank": 27.3
+    },
+    {
+      "rb_rank": 28,
+      "overall_rank": 85,
+      "name": "Zack Moss",
+      "team": null,
+      "bye_week": null,
+      "status": "O",
+      "ranking_1": 28,
+      "ranking_2": 31,
+      "average_rank": 29.0
+    },
+    {
+      "rb_rank": 29,
+      "overall_rank": 91,
+      "name": "Brian Robinson Jr.",
+      "team": "SF",
+      "bye_week": 9,
+      "ranking_1": 34,
+      "ranking_2": 29,
+      "average_rank": 29.3
+    },
+    {
+      "rb_rank": 30,
+      "overall_rank": 84,
+      "name": "Devin Singletary",
+      "team": "NYG",
+      "bye_week": 11,
+      "ranking_1": 33,
+      "ranking_2": 26,
+      "average_rank": 31.0
+    },
+    {
+      "rb_rank": 31,
+      "overall_rank": 94,
+      "name": "Nick Chubb",
+      "team": "HOU",
+      "bye_week": 14,
+      "status": "O",
+      "ranking_1": 27,
+      "ranking_2": 37,
+      "average_rank": 31.3
+    },
+    {
+      "rb_rank": 32,
+      "overall_rank": 87,
+      "name": "Jaylen Warren",
+      "team": "PIT",
+      "bye_week": 9,
+      "ranking_1": 31,
+      "ranking_2": 30,
+      "average_rank": 32.7
+    },
+    {
+      "rb_rank": 33,
+      "overall_rank": 93,
+      "name": "Austin Ekeler",
+      "team": "WAS",
+      "bye_week": 14,
+      "ranking_1": 32,
+      "ranking_2": 34,
+      "average_rank": 33.0
+    },
+    {
+      "rb_rank": 34,
+      "overall_rank": 103,
+      "name": "Jerome Ford",
+      "team": "CLE",
+      "bye_week": 10,
+      "ranking_1": 40,
+      "ranking_2": 32,
+      "average_rank": 34.7
+    },
+    {
+      "rb_rank": 35,
+      "overall_rank": 92,
+      "name": "Jonathon Brooks",
+      "team": "CAR",
+      "bye_week": 11,
+      "status": "O",
+      "ranking_1": 29,
+      "ranking_2": 36,
+      "average_rank": 35.0
+    },
+    {
+      "rb_rank": 36,
+      "overall_rank": 114,
+      "name": "Gus Edwards",
+      "team": null,
+      "bye_week": null,
+      "ranking_1": 35,
+      "ranking_2": 43,
+      "average_rank": 36.3
+    },
+    {
+      "rb_rank": 37,
+      "overall_rank": 105,
+      "name": "Chase Brown",
+      "team": "CIN",
+      "bye_week": 12,
+      "ranking_1": 41,
+      "ranking_2": 33,
+      "average_rank": 36.7
+    },
+    {
+      "rb_rank": 38,
+      "overall_rank": 104,
+      "name": "Tyjae Spears",
+      "team": "TEN",
+      "bye_week": 5,
+      "ranking_1": 36,
+      "ranking_2": 35,
+      "average_rank": 36.7
+    },
+    {
+      "rb_rank": 39,
+      "overall_rank": 116,
+      "name": "Blake Corum",
+      "team": "LAR",
+      "bye_week": 6,
+      "ranking_1": 39,
+      "ranking_2": 38,
+      "average_rank": 39.3
+    },
+    {
+      "rb_rank": 40,
+      "overall_rank": 115,
+      "name": "Trey Benson",
+      "team": "ARI",
+      "bye_week": 11,
+      "ranking_1": 37,
+      "ranking_2": 41,
+      "average_rank": 40.0
+    },
+    {
+      "rb_rank": 41,
+      "overall_rank": 120,
+      "name": "J.K. Dobbins",
+      "team": "DEN",
+      "bye_week": 14,
+      "ranking_1": 44,
+      "ranking_2": 42,
+      "average_rank": 40.3
+    },
+    {
+      "rb_rank": 42,
+      "overall_rank": 113,
+      "name": "Ezekiel Elliott",
+      "team": null,
+      "bye_week": null,
+      "ranking_1": 38,
+      "ranking_2": 40,
+      "average_rank": 40.3
+    },
+    {
+      "rb_rank": 43,
+      "overall_rank": 118,
+      "name": "Chuba Hubbard",
+      "team": "CAR",
+      "bye_week": 11,
+      "ranking_1": 43,
+      "ranking_2": 39,
+      "average_rank": 42.0
+    },
+    {
+      "rb_rank": 44,
+      "overall_rank": 128,
+      "name": "Rico Dowdle",
+      "team": "CAR",
+      "bye_week": 11,
+      "ranking_1": 45,
+      "ranking_2": 44,
+      "average_rank": 42.3
+    },
+    {
+      "rb_rank": 45,
+      "overall_rank": 133,
+      "name": "Ty Chandler",
+      "team": "MIN",
+      "bye_week": 6,
+      "ranking_1": 46,
+      "ranking_2": 45,
+      "average_rank": 45.7
+    },
+    {
+      "rb_rank": 46,
+      "overall_rank": 127,
+      "name": "Zach Charbonnet",
+      "team": "SEA",
+      "bye_week": 10,
+      "ranking_1": 42,
+      "ranking_2": 47,
+      "average_rank": 46.7
+    },
+    {
+      "rb_rank": 47,
+      "overall_rank": 141,
+      "name": "Tyler Allgeier",
+      "team": "ATL",
+      "bye_week": 12,
+      "ranking_1": 48,
+      "ranking_2": 49,
+      "average_rank": 47.3
+    },
+    {
+      "rb_rank": 48,
+      "overall_rank": 140,
+      "name": "Jaylen Wright",
+      "team": "MIA",
+      "bye_week": 6,
+      "ranking_1": 47,
+      "ranking_2": 48,
+      "average_rank": 48.3
+    },
+    {
+      "rb_rank": 49,
+      "overall_rank": 144,
+      "name": "Jaleel McLaughlin",
+      "team": "DEN",
+      "bye_week": 14,
+      "ranking_1": 52,
+      "ranking_2": 46,
+      "average_rank": 48.7
+    },
+    {
+      "rb_rank": 50,
+      "overall_rank": 149,
+      "name": "MarShawn Lloyd",
+      "team": "GB",
+      "bye_week": 10,
+      "ranking_1": 49,
+      "ranking_2": 52,
+      "average_rank": 49.3
+    },
+    {
+      "rb_rank": 51,
+      "overall_rank": 150,
+      "name": "Antonio Gibson",
+      "team": "NE",
+      "bye_week": 14,
+      "ranking_1": 51,
+      "ranking_2": 51,
+      "average_rank": 51.7
+    },
+    {
+      "rb_rank": 52,
+      "overall_rank": 157,
+      "name": "Ray Davis",
+      "team": "BUF",
+      "bye_week": 12,
+      "ranking_1": 54,
+      "ranking_2": 54,
+      "average_rank": 54.7
+    },
+    {
+      "rb_rank": 53,
+      "overall_rank": 164,
+      "name": "Bucky Irving",
+      "team": "TB",
+      "bye_week": 11,
+      "ranking_1": 59,
+      "ranking_2": 53,
+      "average_rank": 55.3
+    },
+    {
+      "rb_rank": 54,
+      "overall_rank": 168,
+      "name": "Braelon Allen",
+      "team": "NYJ",
+      "bye_week": 12,
+      "ranking_1": 55,
+      "ranking_2": 55,
+      "average_rank": 56.0
+    },
+    {
+      "rb_rank": 55,
+      "overall_rank": 176,
+      "name": "Tyrone Tracy Jr.",
+      "team": "NYG",
+      "bye_week": 11,
+      "ranking_1": 56,
+      "ranking_2": 58,
+      "average_rank": 56.3
+    },
+    {
+      "rb_rank": 56,
+      "overall_rank": 188,
+      "name": "Jordan Mason",
+      "team": "MIN",
+      "bye_week": 6,
+      "ranking_1": 71,
+      "ranking_2": 50,
+      "average_rank": 56.7
+    },
+    {
+      "rb_rank": 57,
+      "overall_rank": 177,
+      "name": "Khalil Herbert",
+      "team": "IND",
+      "bye_week": 14,
+      "ranking_1": 58,
+      "ranking_2": 57,
+      "average_rank": 57.3
+    },
+    {
+      "rb_rank": 58,
+      "overall_rank": 162,
+      "name": "Kimani Vidal",
+      "team": "LAC",
+      "bye_week": 5,
+      "ranking_1": 53,
+      "ranking_2": 56,
+      "average_rank": 54.5
+    },
+    {
+      "rb_rank": 59,
+      "overall_rank": 230,
+      "name": "Kenneth Gainwell",
+      "team": "PIT",
+      "bye_week": 9,
+      "ranking_1": 76,
+      "ranking_2": 64,
+      "average_rank": 66.3
+    },
+    {
+      "rb_rank": 60,
+      "overall_rank": 197,
+      "name": "Tank Bigsby",
+      "team": "JAC",
+      "bye_week": 12,
+      "ranking_1": 63,
+      "ranking_2": 60,
+      "average_rank": 61.5
+    },
+    {
+      "rb_rank": 61,
+      "overall_rank": 204,
+      "name": "Alexander Mattison",
+      "team": "MIA",
+      "bye_week": 6,
+      "ranking_1": 65,
+      "ranking_2": 62,
+      "average_rank": 63.5
+    }
+  ],
+  "metadata": {
+    "source": "Fantasy football running back rankings",
+    "notes": [
+      "O = Out",
+      "Rankings 1-2 represent different fantasy football ranking sources",
+      "Average rank is calculated from available rankings",
+      "Some players show no team assignment (free agents or not currently rostered)"
+    ]
+  }
+}

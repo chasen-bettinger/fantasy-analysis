@@ -4,6 +4,7 @@ Data ingestion module for Fantasy Football analysis tool.
 Handles loading data from JSON files and ESPN API into the SQLite database.
 """
 
+import os
 import json
 import logging
 from pathlib import Path
@@ -201,6 +202,9 @@ class DataIngestion:
                     self._load_player_stats(roster_entry, season)
                     self._load_roster_entry(roster_entry, espn_team_id, season)
 
+                    if season == 2024:
+                        self._load_projected_ranks(roster_entry, season)
+
             self._reconcile_player_ranks(season)
             logger.info(f"Loaded player stats for season {season}")
         except Exception as e:
@@ -301,17 +305,17 @@ class DataIngestion:
     def _reconcile_player_ranks(self, season: int) -> None:
         """
         Calculate and update player rankings based on fantasy scores.
-        
+
         Updates position_rank and overall_rank for all players in the specified season:
         - position_rank: Rank within each position (QB1, QB2, RB1, RB2, etc.)
         - overall_rank: Rank across all positions (1 = best overall player)
-        
+
         Args:
             season: Season year to update rankings for
         """
         try:
             logger.info(f"Calculating player rankings for season {season}")
-            
+
             # Update position ranks using SQL window function
             position_rank_query = """
             UPDATE players 
@@ -335,7 +339,7 @@ class DataIngestion:
               AND fantasy_score IS NOT NULL 
               AND fantasy_score > 0
             """
-            
+
             # Update overall ranks using SQL window function
             overall_rank_query = """
             UPDATE players 
@@ -358,23 +362,23 @@ class DataIngestion:
               AND fantasy_score IS NOT NULL 
               AND fantasy_score > 0
             """
-            
+
             with self.db.get_connection() as conn:
                 # Update position ranks
                 cursor = conn.execute(position_rank_query, (season, season))
                 position_updates = cursor.rowcount
-                
+
                 # Update overall ranks
                 cursor = conn.execute(overall_rank_query, (season, season))
                 overall_updates = cursor.rowcount
-                
+
                 conn.commit()
-                
+
                 logger.info(
                     f"Updated rankings for season {season}: "
                     f"{position_updates} position ranks, {overall_updates} overall ranks"
                 )
-                
+
                 # Log some sample rankings for verification
                 sample_query = """
                 SELECT name, position, fantasy_score, position_rank, overall_rank
@@ -385,7 +389,7 @@ class DataIngestion:
                 ORDER BY overall_rank ASC 
                 LIMIT 5
                 """
-                
+
                 sample_results = self.db.execute_query(sample_query, (season,))
                 if sample_results:
                     logger.debug(f"Top 5 ranked players for season {season}:")
@@ -393,10 +397,77 @@ class DataIngestion:
                         logger.debug(
                             f"  {player['overall_rank']}. {player['name']} ({player['position']}#{player['position_rank']}) - {player['fantasy_score']:.1f} pts"
                         )
-                
+
         except Exception as e:
             logger.error(f"Error calculating player rankings for season {season}: {e}")
             raise IngestionError(f"Failed to reconcile player ranks: {e}")
+
+    def _load_projected_ranks(self, roster_entry: Dict[str, Any], season: int) -> None:
+        """
+        Insert projected rankings.
+
+        Args:
+            roster_entry: Player to insert rankings for
+            season: Current fantasy season
+        """
+        try:
+            player_id = roster_entry.get("playerId")
+            if not player_id:
+                return
+
+            player_pool_entry = roster_entry.get("playerPoolEntry")
+            player=player_pool_entry.get("player")
+            eligible_slots = player.get("eligibleSlots")
+            valid_positions = ["QB", "RB", "WR", "TE"]
+            position = self._determine_position(eligible_slots)
+            if position not in valid_positions:
+                return
+
+            position_lower = position.lower()
+            projection_document_name = f"{season}_{position_lower}.json"
+            projection_document_full_path = f"data_source/{projection_document_name}"
+            if not os.path.exists(projection_document_full_path):
+                return
+
+            projection_document = {}
+            with open(projection_document_full_path) as f:
+                projection_document = json.loads(f.read())
+
+            player_pool_name = player.get("fullName")
+            rankings = projection_document.get("rankings")
+            position_rank_label = f"{position_lower}_rank"
+            overall_rank_label = "overall_rank"
+            position_rank = 0
+            overall_rank = 0
+
+            for item in rankings:
+                ranking_name = item.get("name")
+                if ranking_name == player_pool_name:
+                    position_rank = item.get(position_rank_label)
+                    overall_rank = item.get(overall_rank_label)
+                    break
+
+            # Update position ranks using SQL window function
+            position_rank_query = """
+            UPDATE players 
+            SET 
+                projected_position_rank = ?,
+                projected_overall_rank = ? 
+            WHERE season = ? 
+              AND espn_player_id = ? 
+            """
+
+            with self.db.get_connection() as conn:
+                conn.execute(
+                    position_rank_query,
+                    (position_rank, overall_rank, season, player_id),
+                )
+
+                conn.commit()
+
+        except Exception as e:
+            logger.error(f"Error loading projected rank for season {season}: {e}")
+            raise IngestionError(f"Error loading projected rank: {e}")
 
     def _load_fantasy_teams(self, teams: List[Dict[str, Any]], season: int) -> int:
         """Extract and load fantasy teams from draft teams."""

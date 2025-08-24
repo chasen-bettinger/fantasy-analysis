@@ -1,0 +1,653 @@
+{
+  "season": 2024,
+  "position": "WR",
+  "rankings": [
+    {
+      "wr_rank": 1,
+      "overall_rank": 2,
+      "name": "Tyreek Hill",
+      "team": "MIA",
+      "bye_week": 6,
+      "ranking_1": 1,
+      "ranking_2": 2,
+      "average_rank": 1.3
+    },
+    {
+      "wr_rank": 2,
+      "overall_rank": 3,
+      "name": "CeeDee Lamb",
+      "team": "DAL",
+      "bye_week": 7,
+      "ranking_1": 2,
+      "ranking_2": 1,
+      "average_rank": 1.7
+    },
+    {
+      "wr_rank": 3,
+      "overall_rank": 8,
+      "name": "Amon-Ra St. Brown",
+      "team": "DET",
+      "bye_week": 5,
+      "ranking_1": 5,
+      "ranking_2": 3,
+      "average_rank": 3.7
+    },
+    {
+      "wr_rank": 4,
+      "overall_rank": 4,
+      "name": "Justin Jefferson",
+      "team": "MIN",
+      "bye_week": 6,
+      "ranking_1": 3,
+      "ranking_2": 4,
+      "average_rank": 4.0
+    },
+    {
+      "wr_rank": 5,
+      "overall_rank": 7,
+      "name": "Ja'Marr Chase",
+      "team": "CIN",
+      "bye_week": 12,
+      "ranking_1": 4,
+      "ranking_2": 5,
+      "average_rank": 4.3
+    },
+    {
+      "wr_rank": 6,
+      "overall_rank": 9,
+      "name": "A.J. Brown",
+      "team": "PHI",
+      "bye_week": 5,
+      "ranking_1": 6,
+      "ranking_2": 6,
+      "average_rank": 6.0
+    },
+    {
+      "wr_rank": 7,
+      "overall_rank": 13,
+      "name": "Garrett Wilson",
+      "team": "NYJ",
+      "bye_week": 12,
+      "ranking_1": 7,
+      "ranking_2": 7,
+      "average_rank": 7.3
+    },
+    {
+      "wr_rank": 8,
+      "overall_rank": 14,
+      "name": "Puka Nacua",
+      "team": "LAR",
+      "bye_week": 6,
+      "ranking_1": 9,
+      "ranking_2": 8,
+      "average_rank": 8.0
+    },
+    {
+      "wr_rank": 9,
+      "overall_rank": 15,
+      "name": "Marvin Harrison Jr.",
+      "team": "ARI",
+      "bye_week": 11,
+      "ranking_1": 8,
+      "ranking_2": 9,
+      "average_rank": 8.7
+    },
+    {
+      "wr_rank": 10,
+      "overall_rank": 26,
+      "name": "Deebo Samuel Sr.",
+      "team": "WAS",
+      "bye_week": 14,
+      "ranking_1": 14,
+      "ranking_2": 13,
+      "average_rank": 12.3
+    },
+    {
+      "wr_rank": 11,
+      "overall_rank": 21,
+      "name": "Drake London",
+      "team": "ATL",
+      "bye_week": 12,
+      "ranking_1": 10,
+      "ranking_2": 11,
+      "average_rank": 12.7
+    },
+    {
+      "wr_rank": 12,
+      "overall_rank": 22,
+      "name": "Davante Adams",
+      "team": "LAR",
+      "bye_week": 6,
+      "ranking_1": 11,
+      "ranking_2": 10,
+      "average_rank": 13.0
+    },
+    {
+      "wr_rank": 13,
+      "overall_rank": 27,
+      "name": "Nico Collins",
+      "team": "HOU",
+      "bye_week": 14,
+      "ranking_1": 16,
+      "ranking_2": 12,
+      "average_rank": 13.0
+    },
+    {
+      "wr_rank": 14,
+      "overall_rank": 25,
+      "name": "Chris Olave",
+      "team": "NO",
+      "bye_week": 12,
+      "ranking_1": 12,
+      "ranking_2": 15,
+      "average_rank": 14.3
+    },
+    {
+      "wr_rank": 15,
+      "overall_rank": 34,
+      "name": "Brandon Aiyuk",
+      "team": "SF",
+      "bye_week": 9,
+      "status": "O",
+      "ranking_1": 13,
+      "ranking_2": 20,
+      "average_rank": 15.3
+    },
+    {
+      "wr_rank": 16,
+      "overall_rank": 37,
+      "name": "Mike Evans",
+      "team": "TB",
+      "bye_week": 11,
+      "ranking_1": 15,
+      "ranking_2": 23,
+      "average_rank": 16.7
+    },
+    {
+      "wr_rank": 17,
+      "overall_rank": 36,
+      "name": "Cooper Kupp",
+      "team": "SEA",
+      "bye_week": 10,
+      "ranking_1": 20,
+      "ranking_2": 16,
+      "average_rank": 17.0
+    },
+    {
+      "wr_rank": 18,
+      "overall_rank": 42,
+      "name": "DK Metcalf",
+      "team": "PIT",
+      "bye_week": 9,
+      "ranking_1": 21,
+      "ranking_2": 17,
+      "average_rank": 17.3
+    },
+    {
+      "wr_rank": 19,
+      "overall_rank": 40,
+      "name": "DJ Moore",
+      "team": "CHI",
+      "bye_week": 7,
+      "ranking_1": 19,
+      "ranking_2": 18,
+      "average_rank": 19.0
+    },
+    {
+      "wr_rank": 20,
+      "overall_rank": 39,
+      "name": "Jaylen Waddle",
+      "team": "MIA",
+      "bye_week": 6,
+      "ranking_1": 18,
+      "ranking_2": 19,
+      "average_rank": 20.0
+    },
+    {
+      "wr_rank": 21,
+      "overall_rank": 41,
+      "name": "Stefon Diggs",
+      "team": "NE",
+      "bye_week": 14,
+      "status": "O",
+      "ranking_1": 17,
+      "ranking_2": 21,
+      "average_rank": 21.3
+    },
+    {
+      "wr_rank": 22,
+      "overall_rank": 47,
+      "name": "DeVonta Smith",
+      "team": "PHI",
+      "bye_week": 5,
+      "ranking_1": 24,
+      "ranking_2": 22,
+      "average_rank": 21.7
+    },
+    {
+      "wr_rank": 23,
+      "overall_rank": 35,
+      "name": "Michael Pittman Jr.",
+      "team": "IND",
+      "bye_week": 14,
+      "ranking_1": 23,
+      "ranking_2": 14,
+      "average_rank": 22.0
+    },
+    {
+      "wr_rank": 24,
+      "overall_rank": 46,
+      "name": "Malik Nabers",
+      "team": "NYG",
+      "bye_week": 11,
+      "ranking_1": 22,
+      "ranking_2": 24,
+      "average_rank": 24.3
+    },
+    {
+      "wr_rank": 25,
+      "overall_rank": 54,
+      "name": "Amari Cooper",
+      "team": null,
+      "bye_week": null,
+      "ranking_1": 27,
+      "ranking_2": 27,
+      "average_rank": 25.0
+    },
+    {
+      "wr_rank": 26,
+      "overall_rank": 57,
+      "name": "George Pickens",
+      "team": "DAL",
+      "bye_week": 7,
+      "ranking_1": 29,
+      "ranking_2": 26,
+      "average_rank": 25.7
+    },
+    {
+      "wr_rank": 27,
+      "overall_rank": 59,
+      "name": "Tee Higgins",
+      "team": "CIN",
+      "bye_week": 12,
+      "ranking_1": 28,
+      "ranking_2": 29,
+      "average_rank": 27.0
+    },
+    {
+      "wr_rank": 28,
+      "overall_rank": 61,
+      "name": "Tank Dell",
+      "team": "HOU",
+      "bye_week": 14,
+      "status": "O",
+      "ranking_1": 26,
+      "ranking_2": 33,
+      "average_rank": 28.0
+    },
+    {
+      "wr_rank": 29,
+      "overall_rank": 60,
+      "name": "Zay Flowers",
+      "team": "BAL",
+      "bye_week": 14,
+      "ranking_1": 25,
+      "ranking_2": 31,
+      "average_rank": 28.0
+    },
+    {
+      "wr_rank": 30,
+      "overall_rank": 67,
+      "name": "Rashee Rice",
+      "team": "KC",
+      "bye_week": 6,
+      "status": "O",
+      "ranking_1": 38,
+      "ranking_2": 25,
+      "average_rank": 31.3
+    },
+    {
+      "wr_rank": 31,
+      "overall_rank": 63,
+      "name": "Terry McLaurin",
+      "team": "WAS",
+      "bye_week": 14,
+      "ranking_1": 32,
+      "ranking_2": 28,
+      "average_rank": 31.3
+    },
+    {
+      "wr_rank": 32,
+      "overall_rank": 70,
+      "name": "Christian Kirk",
+      "team": "HOU",
+      "bye_week": 14,
+      "status": "O",
+      "ranking_1": 31,
+      "ranking_2": 30,
+      "average_rank": 32.0
+    },
+    {
+      "wr_rank": 33,
+      "overall_rank": 81,
+      "name": "Jayden Reed",
+      "team": "GB",
+      "bye_week": 10,
+      "ranking_1": 34,
+      "ranking_2": 37,
+      "average_rank": 33.7
+    },
+    {
+      "wr_rank": 34,
+      "overall_rank": 80,
+      "name": "Calvin Ridley",
+      "team": "TEN",
+      "bye_week": 5,
+      "ranking_1": 37,
+      "ranking_2": 34,
+      "average_rank": 34.3
+    },
+    {
+      "wr_rank": 35,
+      "overall_rank": 75,
+      "name": "Chris Godwin Jr.",
+      "team": "TB",
+      "bye_week": 11,
+      "status": "O",
+      "ranking_1": 36,
+      "ranking_2": 32,
+      "average_rank": 35.0
+    },
+    {
+      "wr_rank": 36,
+      "overall_rank": 73,
+      "name": "Keenan Allen",
+      "team": "LAC",
+      "bye_week": 5,
+      "ranking_1": 30,
+      "ranking_2": 35,
+      "average_rank": 35.3
+    },
+    {
+      "wr_rank": 37,
+      "overall_rank": 82,
+      "name": "Xavier Worthy",
+      "team": "KC",
+      "bye_week": 6,
+      "ranking_1": 35,
+      "ranking_2": 38,
+      "average_rank": 36.3
+    },
+    {
+      "wr_rank": 38,
+      "overall_rank": 98,
+      "name": "Christian Watson",
+      "team": "GB",
+      "bye_week": 10,
+      "ranking_1": 44,
+      "ranking_2": 40,
+      "average_rank": 39.0
+    },
+    {
+      "wr_rank": 39,
+      "overall_rank": 86,
+      "name": "Diontae Johnson",
+      "team": "CLE",
+      "bye_week": 10,
+      "ranking_1": 42,
+      "ranking_2": 36,
+      "average_rank": 39.0
+    },
+    {
+      "wr_rank": 40,
+      "overall_rank": 89,
+      "name": "Rome Odunze",
+      "team": "CHI",
+      "bye_week": 7,
+      "ranking_1": 33,
+      "ranking_2": 44,
+      "average_rank": 39.7
+    },
+    {
+      "wr_rank": 41,
+      "overall_rank": 100,
+      "name": "DeAndre Hopkins",
+      "team": "BAL",
+      "bye_week": 14,
+      "ranking_1": 45,
+      "ranking_2": 41,
+      "average_rank": 41.3
+    },
+    {
+      "wr_rank": 42,
+      "overall_rank": 95,
+      "name": "Jaxon Smith-Njigba",
+      "team": "SEA",
+      "bye_week": 10,
+      "ranking_1": 46,
+      "ranking_2": 39,
+      "average_rank": 44.0
+    },
+    {
+      "wr_rank": 43,
+      "overall_rank": 110,
+      "name": "Courtland Sutton",
+      "team": "DEN",
+      "bye_week": 14,
+      "ranking_1": 49,
+      "ranking_2": 43,
+      "average_rank": 44.0
+    },
+    {
+      "wr_rank": 44,
+      "overall_rank": 99,
+      "name": "Ladd McConkey",
+      "team": "LAC",
+      "bye_week": 5,
+      "ranking_1": 40,
+      "ranking_2": 45,
+      "average_rank": 44.3
+    },
+    {
+      "wr_rank": 45,
+      "overall_rank": 109,
+      "name": "Jameson Williams",
+      "team": "DET",
+      "bye_week": 5,
+      "ranking_1": 48,
+      "ranking_2": 42,
+      "average_rank": 44.3
+    },
+    {
+      "wr_rank": 46,
+      "overall_rank": 108,
+      "name": "Keon Coleman",
+      "team": "BUF",
+      "bye_week": 12,
+      "ranking_1": 43,
+      "ranking_2": 47,
+      "average_rank": 44.7
+    },
+    {
+      "wr_rank": 47,
+      "overall_rank": 106,
+      "name": "Marquise Brown",
+      "team": "KC",
+      "bye_week": 6,
+      "ranking_1": 41,
+      "ranking_2": 49,
+      "average_rank": 45.0
+    },
+    {
+      "wr_rank": 48,
+      "overall_rank": 101,
+      "name": "Jordan Addison",
+      "team": "MIN",
+      "bye_week": 6,
+      "ranking_1": 39,
+      "ranking_2": 48,
+      "average_rank": 45.7
+    },
+    {
+      "wr_rank": 49,
+      "overall_rank": 112,
+      "name": "Brian Thomas Jr.",
+      "team": "JAC",
+      "bye_week": 12,
+      "ranking_1": 47,
+      "ranking_2": 46,
+      "average_rank": 46.3
+    },
+    {
+      "wr_rank": 50,
+      "overall_rank": 119,
+      "name": "Romeo Doubs",
+      "team": "GB",
+      "bye_week": 10,
+      "ranking_1": 51,
+      "ranking_2": 50,
+      "average_rank": 50.7
+    },
+    {
+      "wr_rank": 51,
+      "overall_rank": 123,
+      "name": "Khalil Shakir",
+      "team": "BUF",
+      "bye_week": 12,
+      "ranking_1": 54,
+      "ranking_2": 51,
+      "average_rank": 51.3
+    },
+    {
+      "wr_rank": 52,
+      "overall_rank": 130,
+      "name": "Joshua Palmer",
+      "team": "BUF",
+      "bye_week": 12,
+      "ranking_1": 56,
+      "ranking_2": 52,
+      "average_rank": 53.3
+    },
+    {
+      "wr_rank": 53,
+      "overall_rank": 121,
+      "name": "Curtis Samuel",
+      "team": "BUF",
+      "bye_week": 12,
+      "ranking_1": 50,
+      "ranking_2": 53,
+      "average_rank": 54.0
+    },
+    {
+      "wr_rank": 54,
+      "overall_rank": 137,
+      "name": "Jakobi Meyers",
+      "team": "LV",
+      "bye_week": 10,
+      "ranking_1": 55,
+      "ranking_2": 55,
+      "average_rank": 54.3
+    },
+    {
+      "wr_rank": 55,
+      "overall_rank": 134,
+      "name": "Tyler Lockett",
+      "team": "TEN",
+      "bye_week": 5,
+      "ranking_1": 52,
+      "ranking_2": 57,
+      "average_rank": 55.0
+    },
+    {
+      "wr_rank": 56,
+      "overall_rank": 138,
+      "name": "Jerry Jeudy",
+      "team": "CLE",
+      "bye_week": 10,
+      "ranking_1": 58,
+      "ranking_2": 54,
+      "average_rank": 55.3
+    },
+    {
+      "wr_rank": 57,
+      "overall_rank": 142,
+      "name": "Mike Williams",
+      "team": null,
+      "bye_week": null,
+      "ranking_1": 57,
+      "ranking_2": 56,
+      "average_rank": 57.0
+    },
+    {
+      "wr_rank": 58,
+      "overall_rank": 152,
+      "name": "Brandin Cooks",
+      "team": "NO",
+      "bye_week": 12,
+      "ranking_1": 62,
+      "ranking_2": 62,
+      "average_rank": 59.7
+    },
+    {
+      "wr_rank": 59,
+      "overall_rank": 147,
+      "name": "Gabe Davis",
+      "team": null,
+      "bye_week": null,
+      "status": "O",
+      "ranking_1": 61,
+      "ranking_2": 58,
+      "average_rank": 60.0
+    },
+    {
+      "wr_rank": 60,
+      "overall_rank": 145,
+      "name": "Adonai Mitchell",
+      "team": "IND",
+      "bye_week": 14,
+      "ranking_1": 53,
+      "ranking_2": 65,
+      "average_rank": 60.3
+    },
+    {
+      "wr_rank": 61,
+      "overall_rank": 151,
+      "name": "Rashid Shaheed",
+      "team": "NO",
+      "bye_week": 12,
+      "status": "O",
+      "ranking_1": 60,
+      "ranking_2": 64,
+      "average_rank": 60.3
+    },
+    {
+      "wr_rank": 62,
+      "overall_rank": 153,
+      "name": "Dontayvion Wicks",
+      "team": "GB",
+      "bye_week": 10,
+      "ranking_1": 64,
+      "ranking_2": 59,
+      "average_rank": 61.0
+    },
+    {
+      "wr_rank": 63,
+      "overall_rank": 160,
+      "name": "Adam Thielen",
+      "team": "CAR",
+      "bye_week": 11,
+      "ranking_1": 68,
+      "ranking_2": 60,
+      "average_rank": 64.0
+    }
+  ],
+  "metadata": {
+    "source": "Fantasy football wide receiver rankings",
+    "notes": [
+      "O = Out",
+      "Rankings 1-2 represent different fantasy football ranking sources",
+      "Average rank is calculated from available rankings",
+      "Some players show no team assignment (free agents or not currently rostered)"
+    ]
+  }
+}

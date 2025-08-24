@@ -1,0 +1,216 @@
+{
+  "season": 2024,
+  "position": "TE",
+  "rankings": [
+    {
+      "te_rank": 1,
+      "overall_rank": 28,
+      "name": "Travis Kelce",
+      "team": "KC",
+      "bye_week": 6,
+      "ranking_1": 1,
+      "ranking_2": 2,
+      "average_rank": 1.3
+    },
+    {
+      "te_rank": 2,
+      "overall_rank": 30,
+      "name": "Sam LaPorta",
+      "team": "DET",
+      "bye_week": 5,
+      "ranking_1": 2,
+      "ranking_2": 1,
+      "average_rank": 1.7
+    },
+    {
+      "te_rank": 3,
+      "overall_rank": 50,
+      "name": "Mark Andrews",
+      "team": "BAL",
+      "bye_week": 14,
+      "ranking_1": 4,
+      "ranking_2": 5,
+      "average_rank": 4.0
+    },
+    {
+      "te_rank": 4,
+      "overall_rank": 48,
+      "name": "Trey McBride",
+      "team": "ARI",
+      "bye_week": 11,
+      "ranking_1": 3,
+      "ranking_2": 4,
+      "average_rank": 4.0
+    },
+    {
+      "te_rank": 5,
+      "overall_rank": 49,
+      "name": "Dalton Kincaid",
+      "team": "BUF",
+      "bye_week": 12,
+      "ranking_1": 5,
+      "ranking_2": 3,
+      "average_rank": 4.7
+    },
+    {
+      "te_rank": 6,
+      "overall_rank": 62,
+      "name": "George Kittle",
+      "team": "SF",
+      "bye_week": 9,
+      "ranking_1": 6,
+      "ranking_2": 8,
+      "average_rank": 6.0
+    },
+    {
+      "te_rank": 7,
+      "overall_rank": 64,
+      "name": "Kyle Pitts Sr.",
+      "team": "ATL",
+      "bye_week": 12,
+      "ranking_1": 7,
+      "ranking_2": 6,
+      "average_rank": 6.7
+    },
+    {
+      "te_rank": 8,
+      "overall_rank": 72,
+      "name": "Evan Engram",
+      "team": "DEN",
+      "bye_week": 14,
+      "status": "O",
+      "ranking_1": 8,
+      "ranking_2": 7,
+      "average_rank": 8.3
+    },
+    {
+      "te_rank": 9,
+      "overall_rank": 83,
+      "name": "Jake Ferguson",
+      "team": "DAL",
+      "bye_week": 7,
+      "ranking_1": 10,
+      "ranking_2": 9,
+      "average_rank": 9.3
+    },
+    {
+      "te_rank": 10,
+      "overall_rank": 88,
+      "name": "David Njoku",
+      "team": "CLE",
+      "bye_week": 10,
+      "ranking_1": 11,
+      "ranking_2": 10,
+      "average_rank": 9.7
+    },
+    {
+      "te_rank": 11,
+      "overall_rank": 90,
+      "name": "Brock Bowers",
+      "team": "LV",
+      "bye_week": 10,
+      "ranking_1": 9,
+      "ranking_2": 11,
+      "average_rank": 10.3
+    },
+    {
+      "te_rank": 12,
+      "overall_rank": 117,
+      "name": "Dallas Goedert",
+      "team": "PHI",
+      "bye_week": 5,
+      "ranking_1": 12,
+      "ranking_2": 12,
+      "average_rank": 12.0
+    },
+    {
+      "te_rank": 13,
+      "overall_rank": 126,
+      "name": "Dalton Schultz",
+      "team": "HOU",
+      "bye_week": 14,
+      "ranking_1": 13,
+      "ranking_2": 15,
+      "average_rank": 14.0
+    },
+    {
+      "te_rank": 14,
+      "overall_rank": 124,
+      "name": "T.J. Hockenson",
+      "team": "MIN",
+      "bye_week": 6,
+      "ranking_1": 14,
+      "ranking_2": 13,
+      "average_rank": 14.7
+    },
+    {
+      "te_rank": 15,
+      "overall_rank": 132,
+      "name": "Cole Kmet",
+      "team": "CHI",
+      "bye_week": 7,
+      "ranking_1": 16,
+      "ranking_2": 16,
+      "average_rank": 15.0
+    },
+    {
+      "te_rank": 16,
+      "overall_rank": 129,
+      "name": "Pat Freiermuth",
+      "team": "PIT",
+      "bye_week": 9,
+      "ranking_1": 15,
+      "ranking_2": 14,
+      "average_rank": 15.0
+    },
+    {
+      "te_rank": 17,
+      "overall_rank": 156,
+      "name": "Luke Musgrave",
+      "team": "GB",
+      "bye_week": 10,
+      "ranking_1": 17,
+      "ranking_2": 18,
+      "average_rank": 17.7
+    },
+    {
+      "te_rank": 18,
+      "overall_rank": 180,
+      "name": "Isaiah Likely",
+      "team": "BAL",
+      "bye_week": 14,
+      "ranking_1": 21,
+      "ranking_2": 20,
+      "average_rank": 18.7
+    },
+    {
+      "te_rank": 19,
+      "overall_rank": 183,
+      "name": "Hunter Henry",
+      "team": "NE",
+      "bye_week": 14,
+      "ranking_1": 22,
+      "ranking_2": 21,
+      "average_rank": 20.7
+    },
+    {
+      "te_rank": 20,
+      "overall_rank": 181,
+      "name": "Tyler Conklin",
+      "team": "LAC",
+      "bye_week": 5,
+      "ranking_1": 23,
+      "ranking_2": 19,
+      "average_rank": 21.0
+    }
+  ],
+  "metadata": {
+    "source": "Fantasy football tight end rankings",
+    "notes": [
+      "O = Out",
+      "Rankings 1-2 represent different fantasy football ranking sources",
+      "Average rank is calculated from available rankings",
+      "TE position typically has fewer fantasy-relevant players compared to other positions"
+    ]
+  }
+}
